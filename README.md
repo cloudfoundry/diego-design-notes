@@ -2,11 +2,11 @@
 
 ## What are all these repos and what do they do?
 
-[![Diego Overview](./diego-overview.png)](http://htmlpreview.github.io/?https://github.com/cloudfoundry-incubator/diego-design-notes/raw/master/clickable-diego-overview/clickable-diego-overview.html)
+[![Diego Overview](./diego-overview.png)](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
 Here's a [PDF](https://github.com/cloudfoundry-incubator/diego-design-notes/raw/master/diego-overview.pdf) version.
 
-Here's a [clickable image map](http://htmlpreview.github.io/?https://github.com/cloudfoundry-incubator/diego-design-notes/raw/master/clickable-diego-overview/clickable-diego-overview.html)
+Here's a [clickable image map](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
 ## What is the life-cycle of a Diego Task?
 
