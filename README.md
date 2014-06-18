@@ -24,6 +24,8 @@ Diego *numbers* the instances that are running.  The numbering begins at `0` and
 
 ## What are all these repos and what do they do?
 
+Here's a diagrammatic overview.  Ingest it slowly as you read through this section.
+
 [![Diego Overview](./diego-overview.png)](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
 Here's a [PDF](https://github.com/cloudfoundry-incubator/diego-design-notes/raw/master/diego-overview.pdf) version.
@@ -166,7 +168,7 @@ Diego is made of very many disparate components.  Ensuring that these components
 
 ### The release
 
-Diego is packaged up as a bosh release called [diego-release](https://github.com/cloudfoundry-incubator/diego-release).  The [README](https://github.com/cloudfoundry-incubator/diego-release) includes detailed instructions for getting a bosh-lite deployment up and running.
+Diego is packaged up as a bosh release called [**diego-release**](https://github.com/cloudfoundry-incubator/diego-release).  The [README](https://github.com/cloudfoundry-incubator/diego-release) includes detailed instructions for getting a bosh-lite deployment up and running.
 
 ### Other Components
 
