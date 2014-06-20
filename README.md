@@ -1,3 +1,8 @@
+The Diego talk presented at CF Summit is on youtube now:
+[https://www.youtube.com/watch?v=1OkmVTFhfLY](https://www.youtube.com/watch?v=1OkmVTFhfLY)
+
+The slide-deck (in Apple .keynote format) is available [here](https://drive.google.com/file/d/0BzowTjPNRrlzWEJtSzJBWThLc0k/edit?usp=sharing)
+
 # Diego Design Notes
 
 These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is not guaranteed to be 100% up-to-date.  If you find something that you suspect is not up-to-date please open an issue.
