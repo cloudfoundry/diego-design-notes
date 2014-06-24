@@ -169,8 +169,8 @@ Diego is made of very many disparate components.  Ensuring that these components
     - includes a NATS server and client for handling auction-related communication.
     - the auctioneer and rep use the auction package to participate in the auction.
 - [**CF-Acceptance-Tests**](https://github.com/cloudfoundry/cf-acceptance-tests)
-    - are a suite of acceptance-level tests that run against a deployed Diego release.
-    - these excercise a number of happy-path test cases across the entire stack.
+    - are a suite of acceptance-level tests that run against a deployment of CF release and Diego release.
+    - these exercise a number of happy-path test cases across the entire stack.
     - use the cf cli to run the tests.
 
 ### The release
