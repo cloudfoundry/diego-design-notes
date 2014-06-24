@@ -15,7 +15,7 @@ Diego schedules and runs *Tasks* and *Long Running Processes*:
 
 > A [**Task**](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/task.go) is guaranteed to be run *at most once*.
 
-> A **Long Running Process** (LRP) may have multiple instances.  Diego is told of the [*desired LRPs*](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/desired_lrp.go).  Each desired LRP may desire multiple instances.  These instances are run (and represented as [*actual LRPs*](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/actual_lrp.go)).  Diego attempts to keep the correct number instances running in the face of network failures and crashes.
+> A **Long Running Process** (LRP) may have multiple instances.  Diego is told of the [*desired LRPs*](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/desired_lrp.go).  Each desired LRP may desire multiple instances.  These instances are run (and represented as [*actual LRPs*](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/actual_lrp.go)).  Diego attempts to keep the correct number of instances running in the face of network failures and crashes.
 
 Both tasks and LRPs are expressed as generic, platform-independent, executable recipes.  The executable actions are defined [here](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/executor_action.go).  The [executor](https://github.com/cloudfoundry-incubator/executor) knows how to run these generic recipes inside [garden](https://github.com/cloudfoundry-incubator/garden) containers.
 
