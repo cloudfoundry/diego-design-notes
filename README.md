@@ -94,7 +94,7 @@ These Diego components deal with running and maintaining generic Tasks and LRPs:
 
 - [**Rep**](https://github.com/cloudfoundry-incubator/rep)
     - represents an *executor* and mediates all communication with the consistent store.
-    - responsible for monitoring for and running tasks and LRPs:
+    - responsible for monitoring and running tasks and LRPs:
         - watches for desired Tasks, claims them if resources are available, runs them via the Executor, then returns success/failure.
         - participates in `LRPStartAuctions` and, upon winning an auction, starts the LRP on the executor.
         - registers actual running LRPs in the consistent store.
