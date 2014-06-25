@@ -118,7 +118,7 @@ These Diego components deal with running and maintaining generic Tasks and LRPs:
     - defines an interface to be implemented by container-runners (e.g. [warden-linux](https://github.com/cloudfoundry-incubator/warden-linux))
 - [**Auctioneer**](https://github.com/cloudfoundry-incubator/auctioneer)
     - runs auctions for requested `LRPStartAuctions` and `LRPStopAuctions`
-    - auctions are run view the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over NATS via the `auction_nats_client`.
+    - auctions are run using the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over NATS via the `auction_nats_client`.
     - maintains a lock in the consistent store such that *only **one*** auctioneer handles auctions. This enables the pool of auctioneers to limit the number of concurrent auctions to ensure a correct (and performant) distribution of LRPs.
     - contains the business logic for determining which Reps may participate in the auction (currently limited to stack-specificity)
 - [**Converger**](https://github.com/cloudfoundry-incubator/converger)
