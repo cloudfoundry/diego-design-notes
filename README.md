@@ -41,7 +41,7 @@ Here's a [clickable image map](http://htmlpreview.github.io/?https://raw.githubu
 
 This diagram includes all the major repositories/components associated with Diego.  Components on the very left live in CF-Release and are part of the current Cloud Foundry infrastructure.  Components on the right are new to Diego.
 
-The [BBS](https://github.com/cloudfoundry-incubator/runtime-schema) lives in the middle and provides a *semantic* interface by which the various components coordinate.  The BBS is broken into different domains (e.g. `task-bbs`, `lrp-bbs`, etc...).  Each domain implements a variety of semantic methods to manage the lifecycle of the domain in question.  The various Diego components are given a view into the BBS (modelled as a Golang interface) that provides them with only the methods that concern them.
+The [BBS](https://github.com/cloudfoundry-incubator/runtime-schema) (Bulletin Board System/Store) lives in the middle and provides a *semantic* interface by which the various components coordinate.  The BBS is broken into different domains (e.g. `task-bbs`, `lrp-bbs`, etc...).  Each domain implements a variety of semantic methods to manage the lifecycle of the domain in question.  The various Diego components are given a view into the BBS (modelled as a Golang interface) that provides them with only the methods that concern them.
 
 There is an interesting *specificity gradient* in this diagram.  Components near the left speak in domain-specific terms about *Apps*.  Components to the right are generic and speak in terms of generic *Tasks* and *Long Running Processes*.
 
