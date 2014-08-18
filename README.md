@@ -21,7 +21,9 @@ Both tasks and LRPs are expressed as generic, platform-independent, executable r
 
 LRPs are distributed via an [auction](https://github.com/cloudfoundry-incubator/auction).  The [LRPStartAuction](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_start_auction.go) model contains all the details necessary to run the auction and *start* an instance of an LRP.
 
-Diego interfaces with the existing Cloud Foundry components (notably [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)) and stages and runs user applications.  It does this by translating the domain-specific notion of apps into the generic language of tasks and LRPs
+Diego includes CF-Bridge, a collection of components that interface with the existing Cloud Foundry components (notably [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)) and stage and run user applications.  This is done by translating the domain-specific notion of apps into the generic language of tasks and LRPs
+
+The collection of Diego components that run and manage Tasks and LRPs is referred to as the Cell.
 
 ### A quick word about LRPs
 
@@ -49,7 +51,7 @@ There is an interesting *specificity gradient* in this diagram.  Components near
 
 These "user-facing" components all live in [cf-release](https://github.com/cloudfoundry/cf-release):
 
-- [**Cloud Controller**](https://github.com/cloudfoundry/cloud_controller_ng) (CC) 
+- [**Cloud Controller**](https://github.com/cloudfoundry/cloud_controller_ng) (CC)
     - provides an API for staging and running Apps.
     - implements all the object modelling around Apps (permissions, buildpack selection, service binding, etc...).
     - Developers interact with the cloud controller via the [CLI](https://github.com/cloudfoundry/cli)
@@ -61,42 +63,31 @@ These "user-facing" components all live in [cf-release](https://github.com/cloud
 - [**Collector**](https://github.com/cloudfoundry/collector)
     - aggregates metrics for CF-Operators.
 
-### App Domain-Specific Diego Components
+### CF-Bridge Components
 
-These Diego components interface with the user-facing components outlined above.  They serve, primarily, to translate app-specific notions into the generic language of LRP and Task:
+The CF-Bridge components interface with the user-facing components outlined above.  They serve, primarily, to translate app-specific notions into the generic language of LRP and Task:
 
 - [**Stager**](https://github.com/cloudfoundry-incubator/stager)
     - receives [staging requests](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/staging_messages.go) from CC over NATS.
     - translates these requests into generic Tasks and submits the Tasks to the BBS.
-    - instructs the executor (via the Task actions) to inject a platform-specific binary to perform the actual staging process (see [below](#platformspecific_components))
+    - instructs the Cell (via the Task actions) to inject a platform-specific binary to perform the actual staging process (see [below](#platformspecific_components))
     - sends a response to CC when a Task is completed (succesfully or otherwise).
 - [**Nsync**](https://github.com/cloudfoundry-incubator/nsync)
-    - listens for [desired app requests](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/desire_app_messages.go) and updates/creates the [desired LRPs](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/desired_lrp.go) in the BBS.
+    - listens for [desired app requests](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/cc_messages/desired_messages.go) and updates/creates the [desired LRPs](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/desired_lrp.go) in the BBS.
     - periodically polls CC for all desired apps to ensure the desired state in BBS pertaining to apps is up-to-date.
-- [**App-Manager**](https://github.com/cloudfoundry-incubator/app-manager)
-    - watches for changes in desired LRP state pertaining to apps.
-    - uses [Delta-Force](https://github.com/cloudfoundry-incubator/delta_force) to identify which actions need to take place to bring desired LRP state and actual LRP state into accord.  Three actions are possible:
-        - [LRPStartAuctions](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_start_auction.go) are requested to start missing app instances via a distributed auction.  The LRPStartAuction model contains all information necessary to run the app (i.e. the generic executor action recipe)
-        - [StopLRPInstance](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_start_auction.go) are requested to stop unnecessary/runaway instances.  These are targeted at specific instance guids.  No auction is held to resolve these.
-        - [LRPStopAuctions](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_stop_auction.go) are requested whenever *multiple* app *instances* are found running at a desired *index*.  A stop auction is held to determine which app instance should be shut down.
-    - instructs the executor (via the LRP actions) to inject a platform-specific binary to perform the manage running and monitoring the process (see [below](#platformspecific_components))
 - [**TPS**](https://github.com/cloudfoundry-incubator/tps)
     - provides the CC with information about currently running `LRPs`.
     - this information is used by the CC to responds to `cf apps` and `cf app X` requests.
-- [**File-Server**](https://github.com/cloudfoundry-incubator/file-server)
-    - mediates uploads bound for the CC coming from the executor.  Translating the executor's simple HTTP POST into the complex multipart-form upload required by CC.
-    - serves static assets used by our various components.  In particular, it serves the linux-circus binaries (see below).
-    - someday the File-Server (and the parts of CC that are concerned with uploading and downloading blobs) will be replaced with a proper blob-store-abstraction service.
 
-### Diego Components that Handle Tasks/LRPs
+### Cell Components that Handle Tasks/LRPs
 
 These Diego components deal with running and maintaining generic Tasks and LRPs:
 
 - [**Rep**](https://github.com/cloudfoundry-incubator/rep)
-    - represents an *executor* and mediates all communication with the consistent store.
+    - represents a Cell and mediates all communication with the consistent store.
     - responsible for monitoring and running tasks and LRPs:
         - watches for desired Tasks, claims them if resources are available, runs them via the Executor, then returns success/failure.
-        - participates in `LRPStartAuctions` and, upon winning an auction, starts the LRP on the executor.
+        - participates in `LRPStartAuctions` and, upon winning an auction, starts the LRP on the Executor.
         - registers actual running LRPs in the consistent store.
         - stops LRPs (either by handling relevant `StopLRPInstance` requests or by participating in an `LRPStopAuction`)
         - participation in auctions is mediated by the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over NATS via the `auction_nats_server`.
@@ -106,13 +97,13 @@ These Diego components deal with running and maintaining generic Tasks and LRPs:
         - INIT containers (spins up a Garden container with appropriate disk/memory limits in place)
         - RUN generic recipes in a previously allocated container
         - DELETE a container (also stops all running code in the container)
-    - the executor is primarily responsible for implementing the generic [executor actions](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/executor_action.go):
+    - the Executor is primarily responsible for implementing the generic [executor actions](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/executor_action.go):
         - `DownloadAction` downloads a blob from a URL and places it in a destination in the container.  Uses the [cached-downloader](https://github.com/pivotal-golang/cacheddownloader) to perform caching.  Uses the [archiver](https://github.com/pivotal-golang/archiver) to decompress/untar if requested.
         - `UploadAction` uploads a blob from the container to a URL.  Uses the [archiver](https://github.com/pivotal-golang/archiver) to tar/compress if requested.
         - `RunAction` runs a script in the context of given environment variables with an alloted (optional) timeout.
         - `FetchResultAction` reads a file from the container and returns its contents.
         - `MonitorAction` performs a given `ExecutorAction` (typically a `RunAction`) and runs it periodically.  Success implies a healthy container.  Failure implies an unhealthy container.  Communicates healthy/unhealthy via an http callback.
-    - when running a `RunAction` the executor can stream stdout and stderr to Loggregator
+    - when running a `RunAction` the Executor can stream stdout and stderr to Loggregator
 - [**Garden**](https://github.com/cloudfoundry-incubator/garden)
     - provides a platform-independent server/client to manage garden containers
     - defines an interface to be implemented by container-runners (e.g. [warden-linux](https://github.com/cloudfoundry-incubator/warden-linux))
@@ -125,13 +116,29 @@ These Diego components deal with running and maintaining generic Tasks and LRPs:
     - maintains a lock in the consistent store to ensure that *only **one*** converger performs convergence.  This is primarily for performance considerations.  Convergence should be idempotent.
     - uses the converge methods in the runtime-schema/bbs to ensure eventual consistency and fault tolerance for:
         - tasks
-        - lrps (desired vs acutal)
+        - LRPs
         - start auctions
         - stop auctions
+    - when convering LRPs, the converger uses [Delta-Force](https://github.com/cloudfoundry-incubator/delta_force) to identify which actions need to take place to bring desired LRP state and actual LRP state into accord.  Three actions are possible:
+        - [LRPStartAuctions](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_start_auction.go) are requested to start missing app instances via a distributed auction.
+        - [StopLRPInstance](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_start_auction.go) are requested to stop unnecessary/runaway instances.  These are targeted at specific instance guids.  No auction is held to resolve these.
+        - [LRPStopAuctions](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_stop_auction.go) are requested whenever *multiple* app *instances* are found running at a desired *index*.  A stop auction is held to determine which app instance should be shut down.
+- [**Metron**](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron)
+    - Forwards application logs and application/Diego metrics to [loggregator](https://github.com/cloudfoundry/loggregator) and [collector](https://github.com/cloudfoundry/collector)
+
+
+### Additional (shim-like) components
+
+- [**File-Server**](https://github.com/cloudfoundry-incubator/file-server)
+    - mediates uploads bound for the CC coming from the Executor.  Translating the Executor's simple HTTP POST into the complex multipart-form upload required by CC.
+    - serves static assets used by our various components.  In particular, it serves the linux-circus binaries (see below).
+    - someday the File-Server (and the parts of CC that are concerned with uploading and downloading blobs) will be replaced with a proper blob-store-abstraction service.
 - [**Route-Emitter**](https://github.com/cloudfoundry-incubator/route-emitter)
     - monitors desired LRP state and actual LRP state.  When a change is detected, the Route-Emitter emits route registration/unregistration messages to the [router](https://github.com/cloudfoundry/gorouter)
     - periodically emits the entire routing table to the router.
     - someday the route-emitter will be a part of the router, which will read from the consistent store to compute the routing table.
+- [**Metrics-Server**](https://github.com/cloudfoundry-incubator/runtime-metrics-server)
+    - reads metrics from the BBS and publishes them to the collector
 
 ### Platform-Specific Components
 
@@ -148,9 +155,9 @@ Diego is largely platform agnostic.  All platform specific concerns are delegate
         - can snapshot containers for down-timeless redeploys
 - [**Linux-Circus**](https://github.com/cloudfoundry-incubator/linux-circus)
     - provides binaries that are side-loaded into containers to manage *App*-specific lifecycle issues.  There are three binaries:
-        - **tailor** is reponsible for *staging*.  The stager instructs the executor to [configure](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/circus_tailor_config.go), inject and run the tailor in the Garden container.  The tailor knows how to run buildpacks against the user's app bits and construct the resulting droplet.
-        - **soldier** is responsible for *launching* apps.  It ensures the app is launched with the correct environment variables.  The app-manager instructs the executor to inject and run the soldier.
-        - **spy** is responsible for verifying the health of the app.  It is periodically launched within the Garden container by the executor.
+        - **tailor** is reponsible for *staging*.  The stager instructs the Cell to [configure](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/circus_tailor_config.go), inject and run the tailor in the Garden container.  The tailor knows how to run buildpacks against the user's app bits and construct the resulting droplet.
+        - **soldier** is responsible for *launching* apps.  It ensures the app is launched with the correct environment variables.  Nsync instructs the Cell to inject and run the soldier.
+        - **spy** is responsible for verifying the health of the app.  It is periodically launched within the Garden container by the Executor.
 
 ### Bringing it all together
 
@@ -185,8 +192,6 @@ Diego is packaged up as a bosh release called [**diego-release**](https://github
 - [**NATS**](https://github.com/apcera/gnatsd)
     - is the message bus used to communicate between various components
     - in particular, NATS is used to perform the (quite chatty) auction.
-- [**Metrics-Server**](https://github.com/cloudfoundry-incubator/runtime-metrics-server)
-    - reads metrics from the BBS and publishes them to the collector
 - [**Storeadapter**](https://github.com/cloudfoundry/store-adapter)
     - provides a driver for interfacing with etcd.
 
