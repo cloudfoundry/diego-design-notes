@@ -7,7 +7,7 @@ The slide-deck (in Apple .keynote format) is available [here](https://drive.goog
 
 # Diego Design Notes
 
-These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is not guaranteed to be 100% up-to-date.  If you find something that you suspect is not up-to-date please open an issue.
+These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is not guaranteed to be up-to-date.  If you find something that you suspect is not up-to-date please open an issue.
 
 ## What does Diego do?
 
@@ -17,11 +17,11 @@ Diego schedules and runs *Tasks* and *Long Running Processes*:
 
 > A **Long Running Process** (LRP) may have multiple instances.  Diego is told of the [*desired LRPs*](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/desired_lrp.go).  Each desired LRP may desire multiple instances.  These instances are run (and represented as [*actual LRPs*](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/actual_lrp.go)).  Diego attempts to keep the correct number of instances running in the face of network failures and crashes.
 
-Both tasks and LRPs are expressed as generic, platform-independent, executable recipes.  The executable actions are defined [here](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/executor_action.go).  The [executor](https://github.com/cloudfoundry-incubator/executor) knows how to run these generic recipes inside [garden](https://github.com/cloudfoundry-incubator/garden) containers.
+Both tasks and LRPs are expressed as generic, platform-independent, executable recipes.  The executable actions are defined [here](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/executor_action.go).  The [executor](https://github.com/cloudfoundry-incubator/executor) knows how to run these generic recipes inside [Garden](https://github.com/cloudfoundry-incubator/garden) containers.
 
 LRPs are distributed via an [auction](https://github.com/cloudfoundry-incubator/auction).  The [LRPStartAuction](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/lrp_start_auction.go) model contains all the details necessary to run the auction and *start* an instance of an LRP.
 
-Diego includes CF-Bridge, a collection of components that interface with the existing Cloud Foundry components (notably [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)) and stage and run user applications.  This is done by translating the domain-specific notion of apps into the generic language of tasks and LRPs
+Diego includes CC-Bridge, a collection of components that interface with Cloud Foundry's [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng) and stage and run user applications.  This is done by translating the domain-specific notion of apps into the generic language of tasks and LRPs
 
 The collection of Diego components that run and manage Tasks and LRPs is referred to as the Cell.
 
@@ -63,9 +63,9 @@ These "user-facing" components all live in [cf-release](https://github.com/cloud
 - [**Collector**](https://github.com/cloudfoundry/collector)
     - aggregates metrics for CF-Operators.
 
-### CF-Bridge Components
+### CC-Bridge Components
 
-The CF-Bridge components interface with the user-facing components outlined above.  They serve, primarily, to translate app-specific notions into the generic language of LRP and Task:
+The CC-Bridge components interface with the user-facing components outlined above.  They serve, primarily, to translate app-specific notions into the generic language of LRP and Task:
 
 - [**Stager**](https://github.com/cloudfoundry-incubator/stager)
     - receives [staging requests](https://github.com/cloudfoundry-incubator/runtime-schema/blob/master/models/staging_messages.go) from CC over NATS.
@@ -106,7 +106,7 @@ These Diego components deal with running and maintaining generic Tasks and LRPs:
     - when running a `RunAction` the Executor can stream stdout and stderr to Loggregator
 - [**Garden**](https://github.com/cloudfoundry-incubator/garden)
     - provides a platform-independent server/client to manage garden containers
-    - defines an interface to be implemented by container-runners (e.g. [warden-linux](https://github.com/cloudfoundry-incubator/warden-linux))
+    - defines an interface to be implemented by container-runners (e.g. [garden-linux](https://github.com/cloudfoundry-incubator/garden-linux))
 - [**Auctioneer**](https://github.com/cloudfoundry-incubator/auctioneer)
     - runs auctions for requested `LRPStartAuctions` and `LRPStopAuctions`
     - auctions are run using the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over NATS via the `auction_nats_client`.
@@ -144,7 +144,7 @@ These Diego components deal with running and maintaining generic Tasks and LRPs:
 
 Diego is largely platform agnostic.  All platform specific concerns are delegated to two components:
 
-- [**Warden-Linux**](https://github.com/cloudfoundry-incubator/warden-linux)
+- [**Garden-Linux**](https://github.com/cloudfoundry-incubator/garden-linux)
     - provides a linux-specific implementation of a Garden interface:
         - can create/delete containers
         - can apply resource limits to containers
