@@ -7,6 +7,7 @@ Here's an outline:
 - [API Overview](overview.md)
 - [Understanding Tasks](tasks.md)
 - [Understanding Long Running Processes (LRPs)](lrps.md)
+- [Available Actions](actions.md)
 - API Reference
     - Tasks
         - [Creating Tasks](create_tasks.md)
