@@ -6,7 +6,7 @@ Diego can run one-off work in the form of Tasks.  When a Task is submitted Diego
 
 When submitting a Task you must construct a valid `TaskCreateRequest`:
 
-```json
+```
 {
     "task_guid": "some-guid",
     "domain": "some-domain",
@@ -14,7 +14,7 @@ When submitting a Task you must construct a valid `TaskCreateRequest`:
     "stack": "lucid64",
 
     "root_fs": "docker:///docker-org/docker-image",
-    env: [
+    "env": [
         {"name": "ENV_NAME_A", "value": "ENV_VALUE_A"},
         {"name": "ENV_NAME_B", "value": "ENV_VALUE_B"}
     ],
@@ -77,7 +77,7 @@ Let's describe each of these fields in turn.
 
 To learn that a Task is completed you must either register a `completion_callback_url` or periodically poll the API to fetch the Task in question.  In both cases, you will receive an object **that includes all the fields on the `TaskCreateRequest`** and the following additional fields:
 
-```json
+```
 {
     ... all TaskCreateRequest fields...
 
