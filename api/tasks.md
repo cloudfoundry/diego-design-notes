@@ -37,41 +37,41 @@ When submitting a Task you must construct a valid `TaskCreateRequest`:
 
 Let's describe each of these fields in turn.
 
-### Task Identifiers
+#### Task Identifiers
 
-#### `task_guid`
-#### `domain`
+##### `task_guid`
+##### `domain`
 
-### Task Placement
+#### Task Placement
 
-#### `stack`
+##### `stack`
 
-### Container Contents and Environment
+#### Container Contents and Environment
 
-#### `root_fs`
-#### `env`
+##### `root_fs`
+##### `env`
 
-### Container Limits
+#### Container Limits
 
-#### `cpu_weight`
-#### `disk_mb`
-#### `memory_mb`
+##### `cpu_weight`
+##### `disk_mb`
+##### `memory_mb`
 
-### Actions
+#### Actions
 
-### Task Completion and Output
+#### Task Completion and Output
 
-#### `result_file`
-#### `completion_callback_url`
+##### `result_file`
+##### `completion_callback_url`
 
-### Logging
+#### Logging
 
-#### `log_guid`
-#### `log_source`
+##### `log_guid`
+##### `log_source`
 
-### Attaching Arbitrary Metadata
+#### Attaching Arbitrary Metadata
 
-#### `annotation`
+##### `annotation`
 
 ## Retreiving Tasks
 
@@ -91,15 +91,15 @@ To learn that a Task is completed you must either register a `completion_callbac
 
 Let's describe each of these fields in turn.
 
-#### `created_at`
+##### `created_at`
 
-#### `failed`
+##### `failed`
 
-#### `failure_reason`
+##### `failure_reason`
 
-#### `result`
+##### `result`
 
-#### `state`
+##### `state`
 
 ## The Task lifecycle
 
