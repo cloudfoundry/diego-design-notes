@@ -7,10 +7,32 @@ When submitting a Task you must construct a valid `TaskCreateRequest`:
 ```json
 {
     task_guid: "some-guid",
-    root_fs: "",
+    domain: "some-domain",
     stack: "lucid64",
-    ...
+
+    root_fs: "docker:///docker-org/docker-image",
+    cpu_weight:
+    disk_mb:
+    memory_mb:
+    env: 
+
+    action:  ACTION,
+
+    result_file:
+    completion_callback_url: "http://optional/callback/url",
+
+    log_guid: ,
+    log_source: ,
+
+    annotation: "arbitrary-metadata"
 }
 ```
+
+<dl>
+<dt>`task_guid`</dt>
+<dt>
+    The task guid...
+</dt>
+</dl>
 
 [back](README.md)
