@@ -49,7 +49,7 @@ It is up to the consumer of Diego to provide a *globally unique* `task_guid`.  T
 
 #### `domain`
 
-The consumer of Diego may organize their Tasks into groupings called Domains.  These are purely organizational (e.g. for enabling multiple consumers to use Diego without colliding) and have no implications of the Task's placement or lifecycle.  It is possible to fetch all Tasks in a given Domain.
+The consumer of Diego may organize their Tasks into groupings called Domains.  These are purely organizational (e.g. for enabling multiple consumers to use Diego without colliding) and have no implications on the Task's placement or lifecycle.  It is possible to fetch all Tasks in a given Domain.
 
 - It is an error to provide an empty `domain`.
 
@@ -61,7 +61,7 @@ In the future Diego will support the notion of Placement Pools via arbitrary tag
 
 Diego can support different target platforms (linux, windows, etc.). `stack` allows you to select which target platform the Task must run against.
 
-Diego's default `stack`
+Diego's default `stack` is `lucid64`
 
 - It is an error to provide an empty `stack`.
 
@@ -213,5 +213,9 @@ At this point it is up to the consumer of Diego to acknowledge and resolve the c
 > The `RESOLVING` state exists to ensure that the `completion_callback_url` is initially called at most once per Task.
 
 > There are a variety of timeouts associated with the `PENDING` and `CLAIMED` states.  It is possible for a Task to jump directly from `PENDING` or `CLAIMED` to `COMPLETED` (and `failed`) if any of these timeouts expire.  If you would like to impose a time limit on how long the Task is allowed to run you can use a `TimeoutAction`.
+
+## Cancelling Tasks
+
+Diego supports cancelling inflight tasks.  More documentation on this is available [here](cancel_tasks.md).
 
 [back](README.md)
