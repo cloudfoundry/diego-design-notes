@@ -210,6 +210,8 @@ Tasks in Diego undergo a simple lifecycle encoded in the Tasks's state:
 
 At this point it is up to the consumer of Diego to acknowledge and resolve the completed Task.  This can either be done via a completion callback (described [above](#completion_callback_url)) or by [deleting](delete_tasks.md) the Task.  When the Task is being resolved it first enters the `RESOLVING` state and is ultimately removed from Diego.
 
+Diego will automatically reap Tasks that remain unresolved after 2 minutes.
+
 > The `RESOLVING` state exists to ensure that the `completion_callback_url` is initially called at most once per Task.
 
 > There are a variety of timeouts associated with the `PENDING` and `CLAIMED` states.  It is possible for a Task to jump directly from `PENDING` or `CLAIMED` to `COMPLETED` (and `failed`) if any of these timeouts expire.  If you would like to impose a time limit on how long the Task is allowed to run you can use a `TimeoutAction`.

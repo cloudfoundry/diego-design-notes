@@ -219,7 +219,7 @@ Finally, it is possible to opt out of monitoring.  If no `monitor` action is spe
 
 ### Fetching DesiredLRPs
 
-Diego allows consumers to [fetch DesiredLRPs](fetch_desired_lrps.md) -- the response object (`DesiredLRPResponse`) is identical to the `DesiredLRPCreateRequest` object described above.
+Diego allows consumers to fetch DesiredLRPs -- the response object (`DesiredLRPResponse`) is identical to the `DesiredLRPCreateRequest` object described above.
 
 When fetching DesiredLRPs one can fetch *all* DesiredLRPs in Diego, all DesiredLRPs of a given `domain`, and a specific DesiredLRP by `process_guid`.
 
@@ -295,7 +295,7 @@ Once the `action` action begins running, Diego begins periodically running the `
 
 ### Killing ActualLRPs
 
-Diego supports killing the `ActualLRP`s for a given `process_guid` at a given `index`.  This is documented [here](restart_actual_lrps.md).  Note that this does not change the *desired* state -- Diego will simply shut down the `ActualLRP`s at the given `index` and will eventually converge on desired state by restarting the (now-missing) instance.  To permanently scale down a DesiredLRP you must update the `instances` field on the DesiredLRP.
+Diego supports killing the `ActualLRP`s for a given `process_guid` at a given `index`.  This is documented [here](lrps.md#killing-actuallrps).  Note that this does not change the *desired* state -- Diego will simply shut down the `ActualLRP`s at the given `index` and will eventually converge on desired state by restarting the (now-missing) instance.  To permanently scale down a DesiredLRP you must update the `instances` field on the DesiredLRP.
 
 ## Freshness
 
