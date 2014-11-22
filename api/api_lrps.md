@@ -9,8 +9,7 @@ We recommend using the [Receptor http client](https://github.com/cloudfoundry-in
 To create a DesiredLRP submit a valid [`DesiredLRPCreateRequest`](lrps.md#describing-desiredlrps) via:
 
 ```
-POST
-/v1/desired_lrps
+POST /v1/desired_lrps
 ```
 
 Diego responds by spinning up ActualLRPs
@@ -20,8 +19,7 @@ Diego responds by spinning up ActualLRPs
 To modify an existing DesiredLRP, submit a valid [`DesiredLRPUpdateRequest`](lrps.md#updating-desiredlrps) via:
 
 ```
-PUT
-/v1/desired_lrps/:process_guid
+PUT /v1/desired_lrps/:process_guid
 ```
 
 Diego responds by immediately taking actions to attain consistency between ActualLRPs and DesiredLRPs.
@@ -33,8 +31,7 @@ Diego responds by immediately taking actions to attain consistency between Actua
 To delete an existing DesiredLRP (thereby shutting down all associated ActualLRPs):
 
 ```
-DELETE
-/v1/desired_lrps/:process_guid
+DELETE /v1/desired_lrps/:process_guid
 ```
 
 ## Fetching DesiredLRPs
@@ -44,8 +41,7 @@ DELETE
 To fetch *all* DesiredLRPs:
 
 ```
-GET
-/v1/desired_lrps
+GET /v1/desired_lrps
 ```
 
 This returns an array of [`DesiredLRPResponse`](lrps.md#fetching-desiredlrps) objects
@@ -56,8 +52,7 @@ This returns an array of [`DesiredLRPResponse`](lrps.md#fetching-desiredlrps) ob
 To fetch all DesiredLRPs in a given [`domain`](lrps.md#domain):
 
 ```
-GET
-/v1/domain/:domain/desired_lrps
+GET /v1/domain/:domain/desired_lrps
 ```
 
 This returns an array of [`DesiredLRPResponse`](lrps.md#fetching-desiredlrps) objects
@@ -67,8 +62,7 @@ This returns an array of [`DesiredLRPResponse`](lrps.md#fetching-desiredlrps) ob
 To fetch a DesiredLRP by [`process_guid`](lrps.md#process-guid):
 
 ```
-GET
-/v1/desired_lrps/:process_guid
+GET /v1/desired_lrps/:process_guid
 ```
 
 This returns a single [`DesiredLRPResponse`](lrps.md#fetching-desiredlrps) object or `404` if none is found.
@@ -80,8 +74,7 @@ This returns a single [`DesiredLRPResponse`](lrps.md#fetching-desiredlrps) objec
 To fecth all ActualLRPs:
 
 ```
-GET
-/v1/actual_lrps
+GET /v1/actual_lrps
 ```
 
 This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) response objects.
@@ -91,8 +84,7 @@ This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) resp
 To fetch all ActualLRPs in a given domain:
 
 ```
-GET
-/v1/domains/:domain/actual_lrps
+GET /v1/domains/:domain/actual_lrps
 ```
 This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) response objects.
 
@@ -101,8 +93,7 @@ This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) resp
 To fetch all ActualLRPs associated with a given DesiredLRP (by `process_guid`):
 
 ```
-GET
-/v1/desired_lrps/:process_guid/actual_lrps
+GET /v1/desired_lrps/:process_guid/actual_lrps
 ```
 
 This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) response objects.
@@ -110,8 +101,7 @@ This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) resp
 To fetch all `actual_lrps` at a *particular index*:
 
 ```
-GET
-/v1/desired_lrps/:process_guid/actual_lrps?index=N
+GET /v1/desired_lrps/:process_guid/actual_lrps?index=N
 ```
 
 This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) response objects.  Note that this is an *array* of `ActualLRPResponse`: it is possible for multiple instances to inhabit the same index (though this should only ever be a transient state).
@@ -121,8 +111,7 @@ This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) resp
 Diego supports killing the ActualLRPs for a given `process_guid` at a given `index`.  This will shut down the specific ActualLRPs but does not modify the desired state - thus the missing instance will automatically restart eventually.
 
 ```
-DELETE
-/v1/desired_lrps/:process_guid/actual_lrps?index=N
+DELETE /v1/desired_lrps/:process_guid/actual_lrps?index=N
 ```
 
 ## Freshness
@@ -145,8 +134,7 @@ Post a `FreshDomainBumpRequest` of the form:
 to:
 
 ```
-POST
-/v1/fresh_domains
+POST /v1/fresh_domains
 ```
 
 You must repeat the post before the `ttl` expires.  To opt out of this, you may specify a `ttl` of 0.
@@ -156,10 +144,9 @@ You must repeat the post before the `ttl` expires.  To opt out of this, you may 
 To fetch all fresh domains:
 
 ```
-GET
-/v1/fresh_domains
+GET /v1/fresh_domains
 ```
 
-This returns an array of `FreshDomainResponse` objects (which are identical to `FreshDomainRequest` objects).
+This returns an array of `FreshDomainResponse` objects (which are identical to `FreshDomainBumpRequest` objects).
 
 [back](README.md)

@@ -4,7 +4,7 @@ Diego can run one-off work in the form of Tasks.  When a Task is submitted Diego
 
 ## Describing Tasks
 
-When submitting a Task you must construct and `POST` a valid `TaskCreateRequest`.  The [API reference](create_tasks.md) includes the details of the request.  Here we simply describe what goes into a `TaskCreateRequest`:
+When submitting a Task you `POST` a valid `TaskCreateRequest`.  The [API reference](api_tasks.md) includes the details of the request.  Here we simply describe what goes into a `TaskCreateRequest`:
 
 ```
 {
@@ -39,15 +39,15 @@ Let's describe each of these fields in turn.
 
 #### Task Identifiers
 
-#### `task_guid`
+#### `task_guid` [required]
 
 It is up to the consumer of Diego to provide a *globally unique* `task_guid`.  To subsequently fetch the Task you refer to it by its `task_guid`.
 
 - It is an error to attempt to create a Task whose `task_guid` matches that of an existing Task.
 - The `task_guid` must only include the characters `a-z`, `A-Z`, `0-9`, `_` and `-`.
-- The `task_guid` may not be empty
+- The `task_guid` must not be empty
 
-#### `domain`
+#### `domain` [required]
 
 The consumer of Diego may organize their Tasks into groupings called Domains.  These are purely organizational (e.g. for enabling multiple consumers to use Diego without colliding) and have no implications on the Task's placement or lifecycle.  It is possible to fetch all Tasks in a given Domain.
 
@@ -57,19 +57,17 @@ The consumer of Diego may organize their Tasks into groupings called Domains.  T
 
 In the future Diego will support the notion of Placement Pools via arbitrary tags associated with Cells.  For now, this functionality is limited to the notion of `stack`.
 
-#### `stack`
+#### `stack` [required]
 
-Diego can support different target platforms (linux, windows, etc.). `stack` allows you to select which target platform the Task must run against.
-
-Diego's default `stack` is `lucid64`
+Diego can support different target platforms (linux, windows, etc.). `stack` allows you to select which target platform the Task must run against.  For a typical Diego deployment you should set `stack` to `lucid64`
 
 - It is an error to provide an empty `stack`.
 
 #### Container Contents and Environment
 
-#### `root_fs`
+#### `root_fs` [optional]
 
-By default, when provisioning a container Diego will mount a pre-configured root filesystem.  Currently, the default filesystem provided by [diego-release](https://github.com/cloudfoundry-incubator/diego-release) is based on lucid64 and is geared towards supporting the Cloud Foundry buildpacks.
+By default, when provisioning a container, Diego will mount a pre-configured root filesystem.  Currently, the default filesystem provided by [diego-release](https://github.com/cloudfoundry-incubator/diego-release) is based on lucid64 and is geared towards supporting the Cloud Foundry buildpacks.
 
 It is possible, however, to provide a custom root filesystem by specifying a Dockerimage for `root_fs`:
 
@@ -83,7 +81,7 @@ Currently, only the public docker hub is supported.
 
 > [Diego-Edge](http://github.com/cloudfoundry-incubator/diego-lite) does not ship with a default rootfs.  You must specify a docker-image when using Diego-Edge.  You can mount the filesystem provided by diego-release by specifying `"root_fs": "docker:///cloudfoundry/lucid64"` or `"root_fs": "docker:///cloudfoundry/trusty64"`.
 
-#### `env`
+#### `env` [optional]
 
 Diego supports the notion of container-level environment variables.  All processes that run in the container will inherit these environment variables.
 
@@ -91,21 +89,21 @@ For more details on the environment variables provided to processes in the conta
 
 #### Container Limits
 
-#### `cpu_weight`
+#### `cpu_weight` [optional]
 
 To control the CPU shares provided to a container, set `cpu_weight`.  This must be a positive number in the range `1-100`.  The `cpu_weight` enforces a relative fair share of the CPU among containers.  It's best explained with examples.  Consider the following scenarios (we shall assume that each container is running a busy process that is attempting to consumer as many CPU resources as possible):
 
 - Two containers, with equal values of `cpu_weight`: both containers will receive equal shares of CPU time.
 - Two containers, one with `cpu_weight=50` the other with `cpu_weight=100`: the latter will get (roughly) 2/3 of the CPU time, the former 1/3.
 
-#### `disk_mb`
+#### `disk_mb` [optional]
 
 A disk quota applied to the entire container.  Any data written on top of the RootFS counts against the Disk Quota.  Processes that attempt to exceed this limit will not be allowed to write to disk.
 
 - `disk_mb` must be an integer > 0
 - The units are megabytes
 
-#### `memory_mb`
+#### `memory_mb` [optional]
 
 A memory limit applied to the entire container.  If the aggregate memory consumption by all processs running in the container exceeds this value, the container will be destroyed.
 
@@ -114,7 +112,7 @@ A memory limit applied to the entire container.  If the aggregate memory consump
 
 #### Actions
 
-#### `action`
+#### `action` [required]
 
 Encodes the action to run when running the Task.  For more details see [actions](actions.md)
 
@@ -122,7 +120,7 @@ Encodes the action to run when running the Task.  For more details see [actions]
 
 When the `action` on a Task terminates the Task is marked as `COMPLETED`.
 
-#### `result_file`
+#### `result_file` [optional]
 
 When a Task completes succesfully Diego can fetch and return the contents of a file in the container.  This is made available in the `result` field of the `TaskResponse` (see [below](#retreiving-tasks)).
 
@@ -130,7 +128,7 @@ To do this, set `result_file` to a valid path in the container.
 
 - Diego only returns the first 10KB of the `result_file`.  If you need to communicate back larger datasets, consider using an `UploadAction` to upload the result file to a blob store.
 
-#### `completion_callback_url`
+#### `completion_callback_url` [optional]
 
 Consumers of Diego have two options to learn that a Task has `COMPLETED`: they can either poll the action or register a callback.
 
@@ -143,19 +141,19 @@ If a `completion_callback_url` is provided Diego will `POST` to the provided URL
 
 #### Logging
 
-Diego uses [loggregator](https://github.com/cloudfoundry-incubator/loggregator) to emit logs generated by container processes to the user.
+Diego uses [doppler](https://github.com/cloudfoundry-incubator/doppler) to emit logs generated by container processes to the user.
 
-#### `log_guid`
+#### `log_guid` [optional]
 
-`log_guid` controls the loggregator guid associated with logs coming from Task processes.  One typically sets the `log_guid` to the `task_guid` though this is not strictly necessary.
+`log_guid` controls the doppler guid associated with logs coming from Task processes.  One typically sets the `log_guid` to the `task_guid` though this is not strictly necessary.
 
-#### `log_source`
+#### `log_source` [optional]
 
 `log_source` is an identifier emitted with each log line.  Individual `RunAction`s can override the `log_source`.  This allows a consumer of the log stream to distinguish between the logs of different processes.
 
 #### Attaching Arbitrary Metadata
 
-#### `annotation`
+#### `annotation` [optional]
 
 Diego allows arbitrary annotations to be attached to a Task.  The annotation must not exceed 10 kilobytes in size.
 
@@ -195,7 +193,7 @@ Once a Task enters the `COMPLETED` state, `failed` will be a boolean indicating 
 
 #### `failure_reason`
 
-If `failed` is `true`, `failure_reason` will be a short string indicating why the Task failed.  Sometimes, in the case of a `RunAction` that has failed this will simply read (e.g.) `exit status 1`.  To debug the Task you will need to fetch the logs from loggregator.
+If `failed` is `true`, `failure_reason` will be a short string indicating why the Task failed.  Sometimes, in the case of a `RunAction` that has failed this will simply read (e.g.) `exit status 1`.  To debug the Task you will need to fetch the logs from doppler.
 
 #### `result`
 

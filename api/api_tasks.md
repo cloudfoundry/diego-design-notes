@@ -9,8 +9,7 @@ We recommend using the [Receptor http client](https://github.com/cloudfoundry-in
 To create a Task submit a valid [`TaskCreateRequest`](tasks.md#describing-tasks) via:
 
 ```
-POST
-/v1/tasks
+POST /v1/tasks
 ```
 
 ## Fetching Tasks
@@ -20,8 +19,7 @@ POST
 To fetch *all* Tasks:
 
 ```
-GET
-/v1/tasks
+GET /v1/tasks
 ```
 
 This returns an array of [`TaskResponse`](tasks.md#retreiving-tasks) objects
@@ -32,8 +30,7 @@ This returns an array of [`TaskResponse`](tasks.md#retreiving-tasks) objects
 To fetch all Tasks in a given [`domain`](tasks.md#domain):
 
 ```
-GET
-/v1/domain/:domain/tasks
+GET /v1/domain/:domain/tasks
 ```
 
 This returns an array of [`TaskResponse`](tasks.md#retreiving-tasks) objects
@@ -43,8 +40,7 @@ This returns an array of [`TaskResponse`](tasks.md#retreiving-tasks) objects
 To fetch a Task by [`task_guid`](tasks.md#task-guid):
 
 ```
-GET
-/v1/tasks/:task_guid
+GET /v1/tasks/:task_guid
 ```
 
 This returns a single [`TaskResponse`](tasks.md#retreiving-tasks) object or `404` if none is found.
@@ -56,8 +52,7 @@ When a Task enters the `COMPLETED` state (see [The Task Lifecycle](tasks.md#the-
 This is done via:
 
 ```
-DELETE
-/v1/tasks/:task_guid
+DELETE /v1/tasks/:task_guid
 ```
 
 You can only resolve a task in the `COMPLETED` state.  Anything else is an error.
@@ -69,8 +64,7 @@ Tasks in the `PENDING`, `CLAIMED`, and `RUNNING` states (see [The Task Lifecycle
 To cancel a task:
 
 ```
-POST
-/v1/tasks/:task_guid/cancel
+POST /v1/tasks/:task_guid/cancel
 ```
 Note, you must resolve the cancelled Task once it enters the `COMPLETED` state.
 

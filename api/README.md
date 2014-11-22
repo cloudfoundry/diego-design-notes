@@ -11,5 +11,5 @@ Here's an outline:
 - [Available Actions](actions.md)
 - API Reference
     - [Tasks](api_tasks.md)
-    - [LRPs)](api_lrps.md)
+    - [LRPs](api_lrps.md)
     - [Cells](api_cells.md)

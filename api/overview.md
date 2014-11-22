@@ -11,7 +11,7 @@ A Diego cluster is comprised of a series of VMs called Cells that can run two di
 
 Tasks and LRPs ultimately run in [Garden](http://github.com/cloudfoundry-incubator/garden) containers on Diego Cells.  The filesystem mounted into these containers can either be a generic rootfs that ships with Diego or an arbitrary Dockerimage.  Processes spawned in these containers are provided with a set of [environment variables](environment.md) to aid in configuration.
 
-In addition to launching and monitoring Tasks and LRPs, Diego can stream logs (via [loggregator](http://github.com/cloudfoundry/loggregator)) out of the container processes to end users, and Diego can route (via the [router](http://github.com/cloudfoundry/router)) incoming web traffic to container processes.
+In addition to launching and monitoring Tasks and LRPs, Diego can stream logs (via [doppler](http://github.com/cloudfoundry/loggregator)) out of the container processes to end users, and Diego can route (via the [router](http://github.com/cloudfoundry/gorouter)) incoming web traffic to container processes.
 
 Consumers of Diego communicate to Diego via an http API.  This API allows you to schedule Tasks and LRPs and to fetch information about running Tasks and LRPs.  While it is possible to run multi-tenant workload on Diego, the API does not provide strong abstractions and protections around managing such work (e.g. users, organizations, quotas, etc...).  Diego simply runs Tasks and LRPs and it is up to the consumer to provide these additional abstractions.  In the case of Cloud Foundry these responsiblities fall on the [Cloud Controller](http://github.com/cloudfoundry/cloud_controller_ng)
 

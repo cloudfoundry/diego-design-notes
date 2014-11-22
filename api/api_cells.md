@@ -3,8 +3,7 @@
 To fetch all available Cells:
 
 ```
-GET
-/v1/cells
+GET /v1/cells
 ```
 
 This will return an array of `CellResponse` objects.  A `CellResponse` is of the form:
