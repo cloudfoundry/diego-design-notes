@@ -107,12 +107,7 @@ Currently, only the public docker hub is supported.
 
 Diego supports the notion of container-level environment variables.  All processes that run in the container will inherit these environment variables.
 
-When mounting a Dockerimage based rootfs Diego will layer the container-level environment variables specified in `env` on top of the environment variables extracted from the Dockerimage.
-
-Processes that run in an `ActualLRP`s container are given some additional environment variables:
-
-- `CF_INSTANCE_INDEX` is an integer denoting the index of the `ActualLRP`.  This will be in the range `0 -> N-1` where `N` is the number of instances on the `DesiredLRP`
-- `CF_INSTANCE_GUID` is a unique identifier associated with an `ActualLRP`.  This will change every time a container is created.
+For more details on the environment variables provided to processes in the container, read [Container Runtime Environment](environment.md)
 
 #### Container Limits
 

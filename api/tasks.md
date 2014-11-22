@@ -85,7 +85,7 @@ Currently, only the public docker hub is supported.
 
 Diego supports the notion of container-level environment variables.  All processes that run in the container will inherit these environment variables.
 
-When mounting a Dockerimage based rootfs Diego will layer the container-level environment variables specified in `env` on top of the environment variables extracted from the Dockerimage.
+For more details on the environment variables provided to processes in the container, read [Container Runtime Environment](environment.md)
 
 #### Container Limits
 

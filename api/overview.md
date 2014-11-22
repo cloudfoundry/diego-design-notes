@@ -9,7 +9,7 @@ A Diego cluster is comprised of a series of VMs called Cells that can run two di
 - [**Tasks**](tasks.md) are one-off processes that Diego guarantees will run at most once.
 - [**Long-Running Processes**](lrps.md) (LRPs) are processes that Diego launches and monitors.  Diego can distribute, run, and monitor `N` instances of a given LRP.  When an LRP instance crashes, Diego restarts it automatically.
 
-Tasks and LRPs ultimately run in [Garden](http://github.com/cloudfoundry-incubator/garden) containers on Diego Cells.  The filesystem mounted into these containers can either be a generic rootfs that ships with Diego or an arbitrary Dockerimage.
+Tasks and LRPs ultimately run in [Garden](http://github.com/cloudfoundry-incubator/garden) containers on Diego Cells.  The filesystem mounted into these containers can either be a generic rootfs that ships with Diego or an arbitrary Dockerimage.  Processes spawned in these containers are provided with a set of [environment variables](environment.md) to aid in configuration.
 
 In addition to launching and monitoring Tasks and LRPs, Diego can stream logs (via [loggregator](http://github.com/cloudfoundry/loggregator)) out of the container processes to end users, and Diego can route (via the [router](http://github.com/cloudfoundry/router)) incoming web traffic to container processes.
 
