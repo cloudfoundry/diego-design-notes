@@ -35,9 +35,10 @@ When desiring an LRP you must construct and `POST` a valid `DesiredLRPCreateRequ
     "disk_mb": 1024,
     "memory_mb": 128,
 
-    "setup": ACTION (optional - see below),
-    "action":  ACTION (see below),
-    "monitor": ACTION (optional - see below),
+    "setup": ACTION,
+    "action":  ACTION,
+    "monitor": ACTION,
+    "start_timeout": N seconds,
 
     "ports": [8080, 5050],
     "routes": ["a.example.com", "b.example.com"],
@@ -101,6 +102,8 @@ It is possible, however, to provide a custom root filesystem by specifying a Doc
 
 Currently, only the public docker hub is supported.
 
+> You *must* specify the dockerimage `root_fs` uri as specified, including the leading `docker:///`!
+
 > [Diego-Edge](http://github.com/cloudfoundry-incubator/diego-lite) does not ship with a default rootfs.  You must specify a docker-image when using Diego-Edge.  You can mount the filesystem provided by diego-release by specifying `"root_fs": "docker:///cloudfoundry/lucid64"` or `"root_fs": "docker:///cloudfoundry/trusty64"`.
 
 #### `env`
@@ -149,6 +152,10 @@ After completing the (optional) `setup` action Diego will then launch the `actio
 #### `monitor`
 
 If provided, Diego will simultaneously launch the long running processes encoded in `action` and proceed to monitor said processes by periodically invoking the `monitor` action.  It is up to the consumer to set up an appropriate `monitor` action - typically a `RunAction`.  If the `monitor` action returns succesfully (exit status code 0), the container is deemed "healthy" - otherwise the container is deemed "unhealthy".  Monitoring is quite flexible in Diego and is outlined in more detail [below](#monitoring-health).
+
+#### `start_timeout`
+
+If provided, Diego will give the `action` action up to `start_timeout` seconds to become healthy before marking the LRP as failed.
 
 #### Networking
 
