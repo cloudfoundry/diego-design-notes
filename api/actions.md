@@ -65,6 +65,7 @@ The download action downloads an archive and extracts it to a specified location
 ```
 {
     "download": {
+        "artifact": "download name"
         "from": "http://some/endpoint",
         "to": "/some/container/path",
         "cache_key": "some-cache-key",
@@ -72,6 +73,9 @@ The download action downloads an archive and extracts it to a specified location
     }
 }
 ```
+#### `artifact` [optional]
+
+If specified, additional logs will be emitted to signify the progress of the download action including the bytes downloaded.
 
 #### `from` [required]
 
@@ -96,12 +100,17 @@ The upload action uploads a file to the specified location:
 ```
 {
     "upload": {
+        "artifact": "upload name"
         "to": "http://some/endpoint",
         "from": "/some/container/file",
         "log_source": "some-log-source"
     }
 }
 ```
+
+#### `artifact` [optional]
+
+If specified, additional logs will be emitted to signify the progress of the upload action including the bytes uploaded.
 
 #### `from` [required]
 
@@ -173,7 +182,7 @@ If provided, logs emitted by this action and its subactions will be tagged with 
         "action": { ...an embedded action... },
         "start_message": "some message",
         "success_message": "some message",
-        "failure_message": "some message",
+        "failure_message_prefix": "some message",
         "log_source": "some-log-source"
     }
 }
@@ -191,9 +200,9 @@ If present, a message to emit before the action runs.
 
 If present, a message to emit when the action succeeds.
 
-#### `failure_message` [optional]
+#### `failure_message_prefix` [optional]
 
-If present, a message to emit when the action fails.
+If present, a message to emit when the action fails. The corresponding error if emittable will be appended with a ':' separator.
 
 #### `log_source` [optional]
 
