@@ -209,7 +209,7 @@ These may be provided simultaneously in one request, or independendantly over se
 
 It is up to the consumer to tell Diego how to monitor an LRP instance.  If provided, Diego uses the `monitor` action to ascertain when an LRP is up.
 
-Typically, an ActualLRP instance begins in an unhealthy state (`STARTING`).  At this point the `monitor` action is polled every 0.5 seconds.  Eventually the `monitor` action succeeds and the instance enters a healthy state (`RUNNING`).  At this point the `monitor` action is polled every 30 seconds.  If the `monitor` action subsequently fails, the ActualLRP is considered crashed.  Diego's consumer is free to define an arbitrary `monitor` action - a `monitor` action may check that a port is accepting connections, or that a URL returns a happy status code, or that a file is present in the container.  In fact, a single `monitor` action might be a composition of other actions that can monitor multiple processes running in the container.
+Typically, an ActualLRP instance begins in an unhealthy state (`CLAIMED`).  At this point the `monitor` action is polled every 0.5 seconds.  Eventually the `monitor` action succeeds and the instance enters a healthy state (`RUNNING`).  At this point the `monitor` action is polled every 30 seconds.  If the `monitor` action subsequently fails, the ActualLRP is considered crashed.  Diego's consumer is free to define an arbitrary `monitor` action - a `monitor` action may check that a port is accepting connections, or that a URL returns a happy status code, or that a file is present in the container.  In fact, a single `monitor` action might be a composition of other actions that can monitor multiple processes running in the container.
 
 Normally, the `action` action on the DesiredLRP does not exit.  It is possible, however, to launch and daemonize a process in Diego.  If the `action` action exits succesfully Diego assumes the process is a daemon and continues monitoring it with the `monitor` action.  If the `action` action fails (e.g. exit with non-zero status code for a `RunAction`) Diego assumes the ActualLRP has failed and schedules it to be restarted.
 
@@ -241,7 +241,7 @@ In all cases, the consumer is given an array of `ActualLRPResponse`:
         "cell_id": "some-cell-id",
         "domain": "some-domain",
         "index": 15,
-        "state": "STARTING" or "RUNNING"
+        "state": "CLAIMED" or "RUNNING"
 
         "host": "10.10.11.11",
         "ports": [
@@ -279,7 +279,7 @@ The `index` of the ActualLRP - an integer between `0` and `N-1` where `N` is the
 
 #### `state`
 
-The state of the ActualLRP.  When an ActualLRP is first scheduled onto a Cell it enters the `STARTING` state.  During this time a container is being created and the various processes inside the container are being spun up.
+The state of the ActualLRP.  When an ActualLRP is first scheduled onto a Cell it enters the `CLAIMED` state.  During this time a container is being created and the various processes inside the container are being spun up.
 
 Once the `action` action begins running, Diego begins periodically running the `monitor` action.  As soon as the `monitor` action reports that the processes are healthy the ActualLRP will transition into the `RUNNING` state.
 

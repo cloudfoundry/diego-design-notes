@@ -93,25 +93,25 @@ This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) resp
 To fetch all ActualLRPs associated with a given DesiredLRP (by `process_guid`):
 
 ```
-GET /v1/desired_lrps/:process_guid/actual_lrps
+GET /v1/actual_lrps/:process_guid
 ```
 
 This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) response objects.
 
-To fetch all `actual_lrps` at a *particular index*:
+To fetch the `actual_lrp` at a *particular index*:
 
 ```
-GET /v1/desired_lrps/:process_guid/actual_lrps?index=N
+GET /v1/actual_lrps/:process_guid/instance/:index
 ```
 
-This returns an array of [`ActualLRPResponse`](lrps.md#fetching-actuallrps) response objects.  Note that this is an *array* of `ActualLRPResponse`: it is possible for multiple instances to inhabit the same index (though this should only ever be a transient state).
+This returns an instance of an `ActualLRPResponse`(lrps.md#fetching-actuallrps) object.
 
 ## Killing ActualLRPs
 
 Diego supports killing the ActualLRPs for a given `process_guid` at a given `index`.  This will shut down the specific ActualLRPs but does not modify the desired state - thus the missing instance will automatically restart eventually.
 
 ```
-DELETE /v1/desired_lrps/:process_guid/actual_lrps?index=N
+DELETE /v1/actual_lrps/:process_guid/instance/:index
 ```
 
 ## Freshness
