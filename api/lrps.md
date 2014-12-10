@@ -82,9 +82,7 @@ Diego can support different target platforms (linux, windows, etc.). `stack` all
 
 #### `instances` [required]
 
-Diego can run and manage multiple instances (`ActualLRP`s) for each `DesiredLRP`.  `instances` specifies the number of desired instances and must be a positive integer.
-
-- It is an error for `instances` to be `0`.  You must explicitly `DELETE` the `DesiredLRP` to shut down all its instances.
+Diego can run and manage multiple instances (`ActualLRP`s) for each `DesiredLRP`.  `instances` specifies the number of desired instances and must not be less than zero.
 
 #### Container Contents and Environment
 
