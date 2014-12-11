@@ -5,6 +5,10 @@ The Diego talk presented at CF Summit is on youtube now:
 
 The slide-deck (in Apple .keynote format) is available [here](https://drive.google.com/file/d/0BzowTjPNRrlzWEJtSzJBWThLc0k/edit?usp=sharing)
 
+** Much of this document is severely out of date.  We're working on putting together something up-to-date and comprehensive.**
+
+For now, you can peruse Diego's Receptor [API docs](https://github.com/cloudfoundry-incubator/receptor/tree/master/doc).  The API docs include a high-level picture of what Diego does.
+
 # Diego Design Notes
 
 These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is not guaranteed to be up-to-date.  If you find something that you suspect is not up-to-date please open an issue.
