@@ -7,7 +7,7 @@ The slide-deck (in Apple .keynote format) is available [here](https://drive.goog
 
 ---
 
-** Much of this document beyond this point is severely out of date.  We're working on putting together something up-to-date and comprehensive.**
+**Much of this document beyond this point is severely out of date.  We're working on putting together something up-to-date and comprehensive.**
 
 For now, you can peruse Diego's Receptor [API docs](https://github.com/cloudfoundry-incubator/receptor/tree/master/doc).  The API docs include a high-level picture of what Diego does.
 
