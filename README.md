@@ -16,7 +16,7 @@ An up-to-date cache of the state of the Diego cluster (including a picture-in-ti
 
 Diego interfaces with [doppler](https://github.com/cloudfoundry/loggregator) to provide real-time streaming logs for all Tasks/LRPs.  Diego also interfaces with the [gorouter](https://github.com/cloudfoundry/gorouter) to automatically route web traffic to running LRP instances.
 
-Diego is the next-generation runtime powering Cloud Foundry (CF), however Diego is abstracted away from CF: CF simply consumes Diego via the Receptor API.  For now, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)'s domain-specific requests to stage and run applications into requests for Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the Receptor.  The process of staging and running a CF application is complex and filled with platform and implementation-specific details.  We encapsulate these concerns in a triad of binaries known collectively as the [Circus](https://github.com/cloudfoundry-incubator/linux-circus).  The Tasks and LRPs produced by the CC-Bridge download the Circus binaries and run them to stage and start CF applications.
+Diego is the next-generation runtime powering Cloud Foundry (CF), however Diego is abstracted away from CF: CF simply consumes Diego via the Receptor API.  For now, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)'s domain-specific requests to stage and run applications into requests for Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the Receptor.  The process of staging and running a CF application is complex and filled with platform and implementation-specific details.  We encapsulate these concerns in a triad of binaries known collectively as the [App Lifecycle](#app-lifecycles).  The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and run them to stage, start, and health-check CF applications.
 
 ## CF Summit Talk
 
@@ -76,7 +76,7 @@ The CC-Bridge components interface with the Cloud Controller.  They serve, prima
     - this information is used by the CC to responds to `cf apps` and `cf app X` requests.
 - [**File-Server**](https://github.com/cloudfoundry-incubator/file-server)
     - mediates uploads bound for the CC coming from the Executor.  Translating the Executor's simple HTTP POST into the complex multipart-form upload required by CC.
-    - serves static assets used by our various components.  In particular, it serves the linux-circus binaries (see below).
+    - serves static assets used by our various components.  In particular, it serves the App Lifecycle binaries (see below).
 
 ### Components on the Cell
 
