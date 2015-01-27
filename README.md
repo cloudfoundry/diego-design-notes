@@ -66,7 +66,7 @@ The CC-Bridge components interface with the Cloud Controller.  They serve, prima
 - [**Stager**](https://github.com/cloudfoundry-incubator/stager)
     - receives staging requests from CC
     - translates these requests into generic Tasks and submits the Tasks to the Receptor
-        - instructs the Cell (via the Task actions) to inject a platform-specific binary to perform the actual staging process (see [below](#platformspecific_components))
+        - instructs the Cell (via the Task actions) to inject a platform-specific binary to perform the actual staging process (see [below](#platform-specific-components))
         - sends a response to CC when a Task is completed (succesfully or otherwise).
 - [**Nsync**](https://github.com/cloudfoundry-incubator/nsync)
     - listens for desired app requests and updates/creates the desired LRPs via the Receptor.
