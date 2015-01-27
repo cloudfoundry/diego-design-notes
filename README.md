@@ -130,9 +130,9 @@ Only the Rep and the Receptor communicate with the BBS and participate in inter-
 
 ### Platform-Specific Components
 
-Diego is largely platform-agnostic.  All platform-specific concerns are delegated to two types of components: the garden backends and the circuses.
+Diego is largely platform-agnostic.  All platform-specific concerns are delegated to two types of components: the *garden backends* and the *app lifecycles*.
 
-#### The Garden Backends
+#### Garden Backends
 
 [**Garden**](https://github.com/cloudfoundry-incubator/garden) contains a set of interfaces each platform-specific backend must implement. These interfaces contain methods to perform the following actions:
 
@@ -148,18 +148,18 @@ Current implementations:
 
 - [**Garden-Linux**](https://github.com/cloudfoundry-incubator/garden-linux) provides a linux-specific implementation of a Garden interface.
 
-#### The Circuses
+#### App Lifecycles
 
-The Circuses provides binaries that manage the *Cloud Foundry*-specific application lifecycle.  There are three binaries:
+Each App Lifecycle provides a set of binaries that manage a *Cloud Foundry*-specific application lifecycle.  There are three binaries:
 
-- The **Tailor** implements *staging* a CF application.  The Tailor generates a Task which the stager runs on Diego.  The Task perfoms static analysis on the application code and does any necessary pre-processing before the application is run by the soldier.
-- The **Soldier** implements *launching* a CF application.  Nsync sets the Soldier as the Action on the CF application's DesiredLRP.  The soldier wraps the user's start command to ensures the app is launched with the correct environment variables.  
-- The **Spy** implements the default *health check* for an app.  Nsync sets the Spy as the Monitor on the CF application's DesiredLRP. 
+- The **Builder** *stages* a CF application.  The CC-Bridge runs the Builder as a Task on every staging request.  The Builder perfoms static analysis on the application code and does any necessary pre-processing before the application is first run.
+- The **Launcher** *runs* a CF application.  The CC-Bridge sets the Launcher as the Action on the CF application's DesiredLRP.  The Launcher executes the user's start command with the correct system context (worcking directory, environment variables, etc).  
+- The **Healthcheck** performs a status check of running CF application from inside the container.  The CC-Bridge sets the Healthcheck as the Monitor action on the CF application's DesiredLRP. 
 
 Current implementations:
 
-- [**Linux-Circus**](https://github.com/cloudfoundry-incubator/linux-circus) implements a traditional buildpack-based lifecycle.
-- [**Docker-Circus**](https://github.com/cloudfoundry-incubator/docker-circus) implements a docker-based lifecycle.
+- [**Buildpack-App-Lifecycle**](https://github.com/cloudfoundry-incubator/buildpack-app-lifecycle) implements a traditional buildpack-based lifecycle.
+- [**Docker-App-Lifecycle**](https://github.com/cloudfoundry-incubator/docker-app-lifecycle) implements a docker-based lifecycle.
 
 ### Bringing it all together
 
