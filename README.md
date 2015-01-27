@@ -130,22 +130,36 @@ Only the Rep and the Receptor communicate with the BBS and participate in inter-
 
 ### Platform-Specific Components
 
-Diego is largely platform agnostic.  All platform specific concerns are delegated to two components:
+Diego is largely platform-agnostic.  All platform-specific concerns are delegated to two types of components: the garden backends and the circuses.
 
-- [**Garden-Linux**](https://github.com/cloudfoundry-incubator/garden-linux)
-    - provides a linux-specific implementation of a Garden interface:
-        - can create/delete containers
-        - can apply resource limits to containers
-        - can open and attach network ports to containers
-        - can copy files into/out of containers
-        - can run processes within containers, streaming back stdout and stderr data
-        - can annotate containers with arbitrary metadata
-        - can snapshot containers for down-timeless redeploys
-- [**Linux-Circus**](https://github.com/cloudfoundry-incubator/linux-circus)
-    - provides binaries that are side-loaded into containers to manage *CF-App*-specific lifecycle issues.  There are three binaries:
-        - **tailor** is reponsible for *staging*.  The stager constructs a Task that instructs the Cell to configure, inject and run the tailor in the Garden container.  The tailor knows how to run buildpacks against the user's app bits and construct the resulting droplet.
-        - **soldier** is responsible for *launching* apps.  It ensures the app is launched with the correct environment variables.  Nsync constructs a DesiredLRP that instructs the Cell to inject and run the soldier.
-        - **spy** is responsible for verifying the health of the app.  It is periodically launched within the Garden container by the Executor.
+#### The Garden Backends
+
+[**Garden**](https://github.com/cloudfoundry-incubator/garden) contains a set of interfaces each platform-specific backend must implement. These interfaces contain methods to perform the following actions:
+
+- create/delete containers
+- apply resource limits to containers
+- open and attach network ports to containers
+- copy files into/out of containers
+- run processes within containers, streaming back stdout and stderr data
+- annotate containers with arbitrary metadata
+- snapshot containers for down-timeless redeploys
+
+Current implementations:
+
+- [**Garden-Linux**](https://github.com/cloudfoundry-incubator/garden-linux) provides a linux-specific implementation of a Garden interface.
+
+#### The Circuses
+
+The Circuses provides binaries that manage the *Cloud Foundry*-specific application lifecycle.  There are three binaries:
+
+- The **Tailor** implements *staging* a CF application.  The Tailor generates a Task which the stager runs on Diego.  The Task perfoms static analysis on the application code and does any necessary pre-processing before the application is run by the soldier.
+- The **Soldier** implements *launching* a CF application.  Nsync sets the Soldier as the Action on the CF application's DesiredLRP.  The soldier wraps the user's start command to ensures the app is launched with the correct environment variables.  
+- The **Spy** implements the default *health check* for an app.  Nsync sets the Spy as the Monitor on the CF application's DesiredLRP. 
+
+Current implementations:
+
+- [**Linux-Circus**](https://github.com/cloudfoundry-incubator/linux-circus) implements a traditional buildpack-based lifecycle.
+- [**Docker-Circus**](https://github.com/cloudfoundry-incubator/docker-circus) implements a docker-based lifecycle.
 
 ### Bringing it all together
 
