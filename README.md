@@ -110,9 +110,9 @@ Only the Rep and the Receptor communicate with the BBS and participate in inter-
 - [**Auctioneer**](https://github.com/cloudfoundry-incubator/auctioneer)
     - holds auctions for Tasks and ActualLRP instances.
     - auctions are run using the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over HTTP and is between the Auctioneer and the Cell Reps.
-    - maintains a lock in the BBS such that *only **one*** auctioneer may handles auctions at a time.
+    - maintains a lock in the BBS such that ***only one*** auctioneer may handles auctions at a time.
 - [**Converger**](https://github.com/cloudfoundry-incubator/converger)
-    - maintains a lock in the BBS to ensure that *only **one*** converger performs convergence.  This is primarily for performance considerations.  Convergence should be idempotent.
+    - maintains a lock in the BBS to ensure that ***only one*** converger performs convergence.  This is primarily for performance considerations.  Convergence should be idempotent.
     - uses the converge methods in the runtime-schema/bbs to ensure eventual consistency and fault tolerance for Tasks and LRPs
     - when converging LRPs, the converger uses identifies which actions need to take place to bring DesiredLRP state and ActualLRP state into accord.  Two actions are possible:
         - if an instance is missing, a start auction is sent.
