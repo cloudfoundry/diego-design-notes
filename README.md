@@ -153,7 +153,7 @@ Current implementations:
 Each App Lifecycle provides a set of binaries that manage a *Cloud Foundry*-specific application lifecycle.  There are three binaries:
 
 - The **Builder** *stages* a CF application.  The CC-Bridge runs the Builder as a Task on every staging request.  The Builder perfoms static analysis on the application code and does any necessary pre-processing before the application is first run.
-- The **Launcher** *runs* a CF application.  The CC-Bridge sets the Launcher as the Action on the CF application's DesiredLRP.  The Launcher executes the user's start command with the correct system context (worcking directory, environment variables, etc).  
+- The **Launcher** *runs* a CF application.  The CC-Bridge sets the Launcher as the Action on the CF application's DesiredLRP.  The Launcher executes the user's start command with the correct system context (working directory, environment variables, etc).  
 - The **Healthcheck** performs a status check of running CF application from inside the container.  The CC-Bridge sets the Healthcheck as the Monitor action on the CF application's DesiredLRP. 
 
 Current implementations:
@@ -170,7 +170,7 @@ Diego is made of very many disparate components.  Ensuring that these components
     - access to the consistent store is mediated via the BBS.  The BBS is comprised of several domain-specific sub-BBS packages.  Each Diego component is then given a *view* into the BBS (implemented as a Golang interface) to clarify the role and responsibility of the component.
     - the models by which components communicate are encoded in the models package.
 - [**Inigo**](https://github.com/cloudfoundry-incubator/inigo)
-    - is an integration test suite that launches the various Diego components and excercises them through various test cases.  As such, Inigo *validates* that a given set of component versions are mutually compatible.s
+    - is an integration test suite that launches the various Diego components and excercises them through various test cases.  As such, Inigo *validates* that a given set of component versions are mutually compatible.
     - in addition to excercising various *non-exceptional* test cases, Inigo can excercise exceptional cases (e.g. when a component fails).
 - [**Auction**](https://github.com/cloudfoundry-incubator/auction)
     - encodes the behavioral details around the auction.
@@ -192,5 +192,5 @@ Diego-Release is also the **canonical** `GOPATH` for the Diego.  All development
 - [**ETCD**](https://github.com/coreos/etcd)
     - is the consistent store at the heart of diego
     - all components that access etcd do so via the runtime-schema/bbs.
-- [**Storeadapter**](https://github.com/cloudfoundry/store-adapter)
+- [**Storeadapter**](https://github.com/cloudfoundry/storeadapter)
     - provides a driver for interfacing with etcd.
