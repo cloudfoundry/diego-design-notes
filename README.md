@@ -25,6 +25,8 @@ The Diego talk presented at CF Summit is on youtube:
 
 The slide-deck (in Apple .keynote format) is available [here](https://drive.google.com/file/d/0BzowTjPNRrlzWEJtSzJBWThLc0k/edit?usp=sharing)
 
+The presentation slide for Diego Talk is available [here](http://www.slideshare.net/Pivotal/cloud-foundry-summit-2014-diego-reenvisioning-the-elastic-runtime)
+
 ## What are all these repos and what do they do?
 
 Here's a diagrammatic overview.  Ingest it slowly as you read through this section.
