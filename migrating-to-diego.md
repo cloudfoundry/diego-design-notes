@@ -50,6 +50,8 @@ will cause an existing application to transition to Diego.  The application will
 
 If you want to ensure uptime we recommend performing a blue-green deploy (i.e. push a copy of your application to Diego then swap routes and scale down the DEA application).
 
+Note that you *must* ensure that the application has the correct stack when switching to Diego.  Diego, currently, runs a `lucid64` stack but there are plans to (very soon) transition to `trusty64` only.  Since a stack change necessitates a restage you must choose to either restage directly on Diego *or* restage on `trusty64` DEAs and then switch over the `diego:true` boolean.
+
 ### Running applications without routes
 
 For the DEA backend `cf push APP_NAME --no-routes` does two things:
@@ -70,6 +72,18 @@ By default, Diego does the same port-based health check that the DEA performs.  
 Note: there are two valid values for `health_check_type`: `port` and `none`.  `port` is the default.
 
 The CLI team is working on a Diego plugin to make specifying/retrieving the healthcheck easier.  The stories are [here](https://www.pivotaltracker.com/story/show/88725844) and [here](https://www.pivotaltracker.com/story/show/88725898).  These instructions will be updated when the plugin is ready.
+
+### Recognizing capacity issues
+
+The Cloud Controller is responsible for scheduling applications on the DEAs.  With Diego this responsibility shifts entirely to Diego.  As a result, the Cloud Controller does not know, ahead of time, whether or not there is capacity to stage/run the application.  Instead, this information (referred to as a placement error) is available *asynchronously* and comes from Diego via the `cf app` api.
+
+The CLI has already been updated to:
+
+- display placement error information when `cf app` is invoked
+- inform users when staging fails because of a placement error
+- inform users when `cf push` fails because the application cannot be placed
+
+> Currently, `cf apps` is misleading.  It will show all instances as healthy even if some of them have a placement error.  We intend to address this soon.
 
 ## Diego Deltas
 
