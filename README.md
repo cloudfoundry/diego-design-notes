@@ -2,6 +2,10 @@
 
 These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is not guaranteed to be up-to-date.  If you find something that you suspect is not up-to-date please open an issue.
 
+## Migrating to Diego
+
+Diego is getting close to production readiness!  We've put together some [guidelines](migrating-to-diego.md) around transitioning applications off of the DEAs and onto Diego.
+
 ## What does Diego do?
 
 Diego schedules and runs *Tasks* and *Long Running Processes*:
