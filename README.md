@@ -78,7 +78,7 @@ The CC-Bridge components interface with the Cloud Controller.  They serve, prima
     - this information is used by the CC to responds to `cf apps` and `cf app X` requests.
 - [**File-Server**](https://github.com/cloudfoundry-incubator/file-server)
     - mediates uploads bound for the CC coming from the Executor.  Translating the Executor's simple HTTP POST into the complex multipart-form upload required by CC.
-    - serves static assets used by our various components.  In particular, it serves the App Lifecycle binaries (see below).
+    - serves static assets used by our various components.  In particular, it serves the App Lifecycle binaries (see [below](#app-lifecycles)).
 
 ### Components on the Cell
 
