@@ -6,7 +6,7 @@ With that said, there are a handful of differences between Diego and the DEAs.  
 
 This migration guide is made up of two sections: 
 - [Targeting Diego](#targeting-diego) describes the API calls necessary to run on Diego
-- [Diego Deltas](#dieg-deltas) describes the differences between Diego and the DEAs
+- [Diego Deltas](#diego-deltas) describes the differences between Diego and the DEAs
 
 ## Targeting Diego
 
