@@ -19,6 +19,7 @@ This migration guide is made up of two sections:
     + [Environment Variables](#environment-variables)
     + [Mixed Instances](#mixed-instances)
     + [Uptime During Deploys](#uptime-during-deploys)
+    + [Application Metrics](#application-metrics)
 
 ## Targeting Diego
 
@@ -263,3 +264,7 @@ If you absolutely must have 100% uptime during the beta period we recommend clon
 ##### Future plans
 
 Diego already ensures that applications remain available during a rolling deploy.  As we get closer to a final candidate we will introduce infrastructure to ensure that backward incompatible changes are migrated appropriately.
+
+### Application Metrics
+
+Application Metrics (CPU/Memory/Disk usage) flow through loggregator with Diego.  The work to support this is almost complete with some pending CLI work still to be done.  Until then it is not possible to fetch application metrics with `cf app`.
