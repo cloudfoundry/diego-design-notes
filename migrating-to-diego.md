@@ -234,7 +234,20 @@ Always use a green-blue deploy strategy when modifying anything about a running 
 
 None
 
+### Uptime During Deploys
 
+Diego ensures that a applications will remain available during a rolling deploy of the Diego cluster.
 
+However, during the beta period, we will likely need to make backward incompatible changes to the cluster which may result in downtime/the need for user intervention (typically an application restart - not a restage - should suffice).
 
+###### Why?
 
+Diego is moving fast - our next major effort is going to be around optimization which may force us to modify how we store application data.  Rather than get bogged down in ensuring backward compatibility and migrating the data between deploys we reserve the right to make breaking changes that will require application restarts.
+
+###### Workarounds
+
+If you absolutely must have 100% uptime during the beta period we recommend cloning your application and running a subset of instances on the DEA backends.  Your DEA application and Diego application could share the same route and the router will transparently load-balance between them both.
+
+###### Future plans
+
+Diego already ensures that applications remain available during a rolling deploy.  As we get closer to a final candidate we will introduce infrastructure to ensure that backward incompatible changes are migrated appropriately.
