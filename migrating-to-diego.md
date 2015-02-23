@@ -6,7 +6,19 @@ With that said, there are a handful of differences between Diego and the DEAs.  
 
 This migration guide is made up of two sections: 
 - [Targeting Diego](#targeting-diego) describes the API calls necessary to run on Diego
+    + [Installing the `diego-beta` CLI Plugin](#installing-the-diego-beta-cli-plugin)
+    + [Starting a new application on Diego](#starting-a-new-application-on-diego)
+    + [Transitioning an application between backends](#transitioning-an-application-between-backends)
+    + [Running applications without routes](#running-applications-without-routes)
+    + [Recognizing capacity issues](#recognizing-capacity-issues)
 - [Diego Deltas](#diego-deltas) describes the differences between Diego and the DEAs
+    + [Staging Performance](#staging-performance)
+    + [Files API](#files-api)
+    + [Health Checks](#health-checks)
+    + [Behavior of Crashing Applications](#behavior-of-crashing-applications)
+    + [Environment Variables](#environment-variables)
+    + [Mixed Instances](#mixed-instances)
+    + [Uptime During Deploys](#uptime-during-deploys)
 
 ## Targeting Diego
 
