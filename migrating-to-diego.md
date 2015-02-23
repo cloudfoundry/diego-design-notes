@@ -5,14 +5,28 @@ Diego is meant to be an in-place replacement of the DEAs.  Droplets staged on DE
 With that said, there are a handful of differences between Diego and the DEAs.  Some of these are slated to be addressed.  Some are not (though they can be if we get feedback that they need to be).
 
 This migration guide is made up of two sections: 
-- [Targetting Diego](#targetting-diego) describes the API calls necessary to run on Diego
+- [Targeting Diego](#targeting-diego) describes the API calls necessary to run on Diego
 - [Diego Deltas](#dieg-deltas) describes the differences between Diego and the DEAs
 
-## Targetting Diego
+## Targeting Diego
 
 App developers can ask CF to run their applications on Diego by setting the `diego` boolean on their application to `true`.  Applications with `diego=true` will stage and run on Diego.
 
 It is possible to modify the `diego` boolean on a running application.  This will cause it to transition from one backend to the other dynamically (though we make no guarantees around uptime).  The preferred approach is to perform a blue-green style deployment onto Diego.
+
+The following instructions assume you have the `diego-beta` CLI plugin.  Instructions for installing it follow.
+
+### Installing the `diego-beta` CLI Plugin
+
+We have published a `cf` CLI plugin that makes opting into Diego easure.  To install the OS X binary:
+
+```
+cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/osx/diego-beta.osx
+```
+
+> Windows and Linux versions of the plugin are [coming soon](https://www.pivotaltracker.com/story/show/88937552)
+
+The `diego-beta` plugin includes subcommands to `enable-diego` and `disable-diego`.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modfying the application's health check with `set-health-check` and `get-health-check`.
 
 ### Starting a new application on Diego
 
@@ -20,37 +34,49 @@ To start a new application on Diego you must push the application *without start
 
 1. Push the application without starting it:
 
-    ```
-    cf push APPLICATION_NAME --no-start
-    ```
+```
+cf push APPLICATION_NAME --no-start
+```
 
 2. Set the `diego` boolean:
 
-    ```
-    cf curl /v2/apps/`cf app APPLICATION_NAME --guid` -X PUT -d `{"diego":true}`
-    ```
+```
+cf enable-diego APPLICATION_NAME
+```
+
+> This is equivalent to cf ``curl /v2/apps/`cf app APPLICATION_NAME --guid` -X PUT -d '{"diego":true}'``
 
 3. Start the application:
 
-    ```
-    cf start APPLICATION_NAME
-    ```
-
-The CLI team is working on a Diego plugin to make step 2 substantially easier.  The stories are [here](https://www.pivotaltracker.com/story/show/88646336), [here](https://www.pivotaltracker.com/story/show/88646338), and [here](https://www.pivotaltracker.com/story/show/88646340).  These instructions will be updated when the plugin is ready.
+```
+cf start APPLICATION_NAME
+```
 
 ### Transitioning an application between backends
 
 Simply setting the `diego` boolean:
 
-    ```
-    cf curl /v2/apps/`cf app APPLICATION_NAME --guid` -X PUT -d `{"diego":true}`
-    ```
+```
+cf enable-diego APPLICATION_NAME
+```
 
 will cause an existing application to transition to Diego.  The application will immediately start running on Diego and will *eventually* stop running on the DEAs.  While this gives some safety there are no strong guarantees around uptime.
 
 If you want to ensure uptime we recommend performing a blue-green deploy (i.e. push a copy of your application to Diego then swap routes and scale down the DEA application).
 
 Note that you *must* ensure that the application has the correct stack when switching to Diego.  Diego, currently, runs a `lucid64` stack but there are plans to (very soon) transition to `trusty64` only.  Since a stack change necessitates a restage you must choose to either restage directly on Diego *or* restage on `trusty64` DEAs and then switch over the `diego:true` boolean.
+
+To transition back to the DEAs:
+
+```
+cf disable-diego APPLICATION_NAME
+```
+
+To tell which backend the application is targetting:
+
+```
+cf has-diego-enabled APPLICATION_NAME
+```
 
 ### Running applications without routes
 
@@ -65,13 +91,15 @@ Diego does health checks [differently compared to the DEAs](#health-checks).  Wi
 
 By default, Diego does the same port-based health check that the DEA performs.  If your applcation does *not* listen on a port (e.g. you are pushing a resque worker) then Diego will never see the application come up and will eventually mark it as crashed.  In thsese cases you must tell Diego to perform no health check:
 
-    ```
-    cf curl /v2/apps/`cf app APPLICATION_NAME --guid` -X PUT -d `{"health_check_type":"none"}`
-    ```
+```
+cf set-health-check APPLICATION_NAME none
+```
 
-Note: there are two valid values for `health_check_type`: `port` and `none`.  `port` is the default.
+Note: there are two valid values for the health check: `port` and `none`.  `port` is the default.  You can get the current health check via
 
-The CLI team is working on a Diego plugin to make specifying/retrieving the healthcheck easier.  The stories are [here](https://www.pivotaltracker.com/story/show/88725844) and [here](https://www.pivotaltracker.com/story/show/88725898).  These instructions will be updated when the plugin is ready.
+```
+cf get-health-check APPLICATION_NAME
+```
 
 ### Recognizing capacity issues
 
@@ -101,7 +129,15 @@ Diego, being a generic container runtime, does not treat buildpacks in a special
 
 ##### Workarounds
 
-The simplest way to speed up staging performance is to specify a particular buildpack via the `-b` flag on `cf push`.  This will cause Diego to only fetch and copy in the single specified buildpack.
+The simplest way to speed up staging performance is to specify a particular buildpack via the `-b` flag on `cf push`.  This will cause Diego to only fetch and copy in the single specified buildpack.  For example:
+
+```
+cf push my-app -b ruby_buildpack --no-start
+cf enable-diego my-app
+cf start
+```
+
+Will stage the requested application using only the Ruby buildpack.
 
 ##### Future plans
 
