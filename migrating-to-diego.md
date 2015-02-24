@@ -31,13 +31,30 @@ The following instructions assume you have the `diego-beta` CLI plugin.  Instruc
 
 ### Installing the `diego-beta` CLI Plugin
 
-We have published a `cf` CLI plugin that makes opting into Diego easure.  To install the OS X binary:
+We have published a `cf` CLI plugin that makes opting into Diego easure.
 
+For CF CLI v6.10.0+ you can install from the CF-Community repo:
+
+```
+cf install-plugin Diego-Beta -r CF-Community
+```
+
+For older versions of the CF CLI:
+
+*To install the OS X binary:*
 ```
 cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/osx/diego-beta.osx
 ```
 
-> Windows and Linux versions of the plugin are [coming soon](https://www.pivotaltracker.com/story/show/88937552)
+*To install the linux binary:*
+```
+cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/linux64/diego-beta.linux64
+```
+
+*To install the windows binary:*
+```
+cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/win64/diego-beta.win64
+```
 
 The `diego-beta` plugin includes subcommands to `enable-diego` and `disable-diego`.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modfying the application's health check with `set-health-check` and `get-health-check`.
 
