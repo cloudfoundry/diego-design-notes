@@ -36,6 +36,7 @@ We have published a `cf` CLI plugin that makes opting into Diego easure.
 For CF CLI v6.10.0+ you can install from the CF-Community repo:
 
 ```
+cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
 cf install-plugin Diego-Beta -r CF-Community
 ```
 
