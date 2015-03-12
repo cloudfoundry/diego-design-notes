@@ -57,7 +57,7 @@ cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw
 cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/win64/diego-beta.win64
 ```
 
-The `diego-beta` plugin includes subcommands to `enable-diego` and `disable-diego`.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modfying the application's health check with `set-health-check` and `get-health-check`.
+The `diego-beta` plugin includes subcommands to `enable-diego` and `disable-diego`.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modifying the application's health check with `set-health-check` and `get-health-check`.
 
 ### Starting a new application on Diego
 
@@ -103,7 +103,7 @@ To transition back to the DEAs:
 cf disable-diego APPLICATION_NAME
 ```
 
-To tell which backend the application is targetting:
+To tell which backend the application is targeting:
 
 ```
 cf has-diego-enabled APPLICATION_NAME
@@ -120,7 +120,7 @@ For the DEA backend `cf push APP_NAME --no-routes` does two things:
 
 Diego does health checks [differently compared to the DEAs](#health-checks).  With Diego `cf push APP_NAME --no-routes` only skips creating and binding a route for the application.  It does not tell Diego which type of health check to perform.
 
-By default, Diego does the same port-based health check that the DEA performs.  If your applcation does *not* listen on a port (e.g. you are pushing a resque worker) then Diego will never see the application come up and will eventually mark it as crashed.  In thsese cases you must tell Diego to perform no health check:
+By default, Diego does the same port-based health check that the DEA performs.  If your applcation does *not* listen on a port (e.g. you are pushing a resque worker) then Diego will never see the application come up and will eventually mark it as crashed.  In these cases you must tell Diego to perform no health check:
 
 ```
 cf set-health-check APPLICATION_NAME none
@@ -134,7 +134,7 @@ cf get-health-check APPLICATION_NAME
 
 ### Recognizing capacity issues
 
-The Cloud Controller is responsible for scheduling applications on the DEAs.  With Diego this responsibility shifts entirely to Diego.  As a result, the Cloud Controller does not know, ahead of time, whether or not there is capacity to stage/run the application.  Instead, this information (referred to as a placement error) is available *asynchronously* and comes from Diego via the `cf app` api.
+The Cloud Controller is responsible for scheduling applications on the DEAs.  With Diego this responsibility shifts entirely to Diego.  As a result, the Cloud Controller does not know, ahead of time, whether or not there is capacity to stage/run the application.  Instead, this information (referred to as a placement error) is available *asynchronously* and comes from Diego via the `cf app` API.
 
 The CLI has already been updated to:
 
@@ -156,7 +156,7 @@ Diego's staging performance is somewhat slower than the DEAs.
 
 The DEAs are tightly coupled to the notion that staging entails running through a set of buildpacks.  Because of this there are optimizations in place that treat buildpacks as *special things*: in short, the DEAs basically mount the buildpacks directly into containers.
 
-Diego, being a generic container runtime, does not treat buildpacks in a special way.  They are simply assets that are downloaded and copied into containers.  The only optimization in place is a local download cache that allows Diego to avoid the download step.  At this time, however, the buildpacks need to be *copied* into each container - this copy step is expensive and does not parallelize well (it's disk-performance-bound).  This is excaserbated by the size of CF's offline buildpacks.
+Diego, being a generic container runtime, does not treat buildpacks in a special way.  They are simply assets that are downloaded and copied into containers.  The only optimization in place is a local download cache that allows Diego to avoid the download step.  At this time, however, the buildpacks need to be *copied* into each container - this copy step is expensive and does not parallelize well (it's disk-performance-bound).  This is exacerbated by the size of CF's offline buildpacks.
 
 ##### Workarounds
 
@@ -206,7 +206,7 @@ Diego does health checks differently.  Like the DEAs, Diego performs the health 
 
 Currently Diego supports a port-based health check (like the DEAs).  However, Diego's health check is completely generic (Diego simply runs a process in the container periodically - if the process exits succesfully the application is considered healthy).  There are plans to support URL-based health checks.  We can also support launching arbitrary binaries to allow users to perform custom health checks.
 
-Applications that do not listen on a port will need to disable the health check.  THis is described [above](#running-applications-without-routes).
+Applications that do not listen on a port will need to disable the health check.  This is described [above](#running-applications-without-routes).
 
 ### Behavior of Crashing Applications
 
