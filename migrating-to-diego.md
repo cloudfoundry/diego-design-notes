@@ -285,4 +285,4 @@ Diego already ensures that applications remain available during a rolling deploy
 
 ### Application Metrics
 
-Application Metrics (CPU/Memory/Disk usage) flow through loggregator with Diego.  The work to support this is almost complete with some pending CLI work still to be done.  Until then it is not possible to fetch application metrics with `cf app`.
+Diego passes Application Metrics (CPU/Memory/Disk usage) to Loggregator.  The latest (currently "unstable") release of the `cf` CLI knows how to fetch metrics from Loggregator (via `cf app`).  Consumers previously relying on the CC API for metrics will have to change to fetch these metrics from Loggregator instead.  We may backport support for the CC API though this is not currently a priority.
