@@ -4,8 +4,9 @@ Diego is meant to be an in-place replacement of the DEAs.  Droplets staged on DE
 
 With that said, there are a handful of differences between Diego and the DEAs.  Some of these are slated to be addressed.  Some are not (though they can be if we get feedback that they need to be).
 
-This migration guide is made up of two sections: 
-- [Targeting Diego](#targeting-diego) describes the API calls necessary to run on Diego
+This migration guide is made up of three sections:
+
+- [Targeting Diego](#targeting-diego) is intended for *developers* and describes the API calls necessary to run on Diego
     + [Installing the `diego-beta` CLI Plugin](#installing-the-diego-beta-cli-plugin)
     + [Starting a new application on Diego](#starting-a-new-application-on-diego)
     + [Transitioning an application between backends](#transitioning-an-application-between-backends)
@@ -20,6 +21,13 @@ This migration guide is made up of two sections:
     + [Mixed Instances](#mixed-instances)
     + [Uptime During Deploys](#uptime-during-deploys)
     + [Application Metrics](#application-metrics)
+- [Managing the Migration](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches
+    + [The Importance of Communication](#the-importance-of-communication)
+    + [Auditing Applications](#auditing-applications)
+    + [Controlling Access to the Diego Boolean](#controlling-access-to-the-diego-boolean)
+    + [Setting the Default Backend](#setting-the-default-backend)
+    + [Forcibly Moving Applications](#forcibly-moving-applications)
+    + [A Detailed Transition Timeline](#a-detailed-transition-timeline)
 
 ## Targeting Diego
 
@@ -286,3 +294,87 @@ Diego already ensures that applications remain available during a rolling deploy
 ### Application Metrics
 
 Diego passes Application Metrics (CPU/Memory/Disk usage) to Loggregator.  The latest (currently "unstable") release of the `cf` CLI knows how to fetch metrics from Loggregator (via `cf app`).  Consumers previously relying on the CC API for metrics will have to change to fetch these metrics from Loggregator instead.  We may backport support for the CC API though this is not currently a priority.
+
+## Managing the Migration
+
+This section is intended primarily for operators of Cloud Foundry: those tasked with deploying and managing a Cloud Foundry installation.
+
+### The Importance of Communication
+
+Transitioning from one backend to another safely is a substantial undertaking.  While the Diego team has worked hard to make Diego backward compatible with the DEAs a transition isn't as simple as flipping a switch.
+
+We expect that most operators will want to deploy Diego Cells alongside the DEAs for some period of time.  This will give operators an opportunity to get familiar with Diego, and developers the opportunity to try their applications on Diego and submit feedback.  The goal during this time is to build confidence in the new platform and to suss out any unanticipated incompatibilities and issues.
+
+Navigating this transition effectively is more about human communication than it is about technology.  We expect a typical transition plan might look something like this:
+
+- Operators deploy a small set of Diego Cells alongside an existing DEA deployment.
+- Operators advertise the presence of Diego with a subset of developers encouraging them to try pushing their applications (particularly staging/test versions) to Diego.
+- After a cycle of feedback and monitoring operators might invite more developers to opt-in to Diego.
+- With time, operators might inform all their developers that Diego will be replacing the DEAs at some point in the future.  Operators would set a deadline for developers to opt-into Diego.
+- When the deadline arrives, Operators can identify developers that have not opted into Diego and reach out to them.
+- At some point if there are still stragglers that haven't opted into Diego, Operators can revoke the ability of their developers to opt into/out off Diego and forcibly transition the remaining applications.
+
+In this way the Operator can ensure that all applications are on Diego before performing a deploy that tears down all the DEAs.  A more detailed timeline is [outlined below](#a-detailed-transition-timeline).
+
+The following sections describe the tools available to the Operator.
+
+### Auditing Applications
+
+Operators can identify applications that are/are not targetting the Diego backend by querying the Cloud Controller API:
+
+```
+cf curl /v2/apps?query=diego=true
+```
+
+and
+
+```
+cf curl /v2/apps?query=diego=false
+```
+
+### Controlling Access to the Diego Boolean
+
+The `cc.users_can_select_backend` BOSH property controls whether or not none-admin users can modify the Diego boolean.
+
+### Setting the Default Backend
+
+The `cc.default_to_diego_backend` BOSH property determines whether *new* applications run on Diego or the DEAs.
+
+### Forcibly Moving Applications
+
+After auditing applications and identifying the set that are not running on Diego, operators can use the CC API to set the Diego boolean:
+
+```
+cf curl /v2/apps/APP_GUID -d '{"diego": true}' -X PUT
+```
+
+We recommend doing this in batches to monitor the load on the Diego backend as applications transition from the DEAs to Diego.
+
+### A Detailed Transition Timeline
+
+Putting these APIs together we can paint a detailed picture of the transition plan outlined above.  To make this concrete we'll cook up an arbitrary transition date: in our example operators will be turning off the DEAs in Mid-September.
+
+- June:
+    + Operators deploy Diego Cells alongside the DEAs
+    + Operators give users the ability to select which backend their applications run on (`cc.users_can_select_backend=true`)
+    + Operators set the default Backend to DEA (`cc.default_to_diego_backend=false`)
+    + Operators send an e-mail to a subset of developers, encouraging them to use the Diego CLI plugin to opt into Diego and provide feedback
+- July:
+    + After a beta-period, operators send an e-mail to all developers that:
+        + Informs developers about Diego and includes (links to) instructions for transitioning to Diego
+        + Directs developers to provide feedback about Diego
+        + Informs developers that DEA support will be removed on September 1st
+    + Operators monitor Diego to ensure there are sufficient Cells to handle the load as Developers transition to Diego
+    + Operators also monitor the DEAs and reduce the number of DEAs as demand drops
+- August:
+    + Operators audit all running applications and identify applications that are *not* running on Diego
+    + Operators e-mail developers that have not yet opted into Diego (this may occur several times leading up to the transition deadline)
+- September:
+    + The public transition deadline has arrived
+    + Operators revoke the ability for users to select which backend their applications run on (`cc.users_can_select_backend=false`)
+    + Operators set the default backend to Diego (`cc.default_to_diego_backend=true`)
+    + Operators notify the remaining holdouts that their apps are going to be migrated to Diego
+    + Operators begin transitioning none-Diego apps to Diego
+- Mid-September:
+    + Operators finish transitioning none-Diego apps to Diego
+    + Operators delete the DEAs, the transition is complete
