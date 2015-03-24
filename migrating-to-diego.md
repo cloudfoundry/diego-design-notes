@@ -323,13 +323,13 @@ The following sections describe the tools available to the Operator.
 Operators can identify applications that are/are not targetting the Diego backend by querying the Cloud Controller API:
 
 ```
-cf curl /v2/apps?query=diego=true
+cf curl /v2/apps?q=diego:true
 ```
 
 and
 
 ```
-cf curl /v2/apps?query=diego=false
+cf curl /v2/apps?q=diego:false
 ```
 
 ### Controlling Access to the Diego Boolean
