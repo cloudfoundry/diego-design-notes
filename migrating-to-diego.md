@@ -192,7 +192,7 @@ CF's existing feature set is massive and we had to cut scope to ship a Diego bet
 
 ##### Workarounds
 
-None*
+None
 
 > * Technically, there are hacky ways around this.  There's nothing stopping running applications from having secured endpoints that fetch files from their local filesystems...
 
@@ -334,7 +334,7 @@ cf curl /v2/apps?q=diego:false
 
 ### Controlling Access to the Diego Boolean
 
-The `cc.users_can_select_backend` BOSH property controls whether or not none-admin users can modify the Diego boolean.
+The `cc.users_can_select_backend` BOSH property controls whether or not non-admin users can modify the Diego boolean.
 
 ### Setting the Default Backend
 
@@ -374,7 +374,7 @@ Putting these APIs together we can paint a detailed picture of the transition pl
     + Operators revoke the ability for users to select which backend their applications run on (`cc.users_can_select_backend=false`)
     + Operators set the default backend to Diego (`cc.default_to_diego_backend=true`)
     + Operators notify the remaining holdouts that their apps are going to be migrated to Diego
-    + Operators begin transitioning none-Diego apps to Diego
+    + Operators begin transitioning non-Diego apps to Diego
 - Mid-September:
-    + Operators finish transitioning none-Diego apps to Diego
+    + Operators finish transitioning non-Diego apps to Diego
     + Operators delete the DEAs, the transition is complete
