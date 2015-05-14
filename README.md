@@ -96,9 +96,8 @@ These Diego components deal with running and maintaining generic Tasks and LRPs:
         + ensuring the set of Tasks and ActualLRPs in the BBS is in sync with the containers actually present on the Cell
         + maintaining the presence of the Cell in the BBS.  Should the Cell fail catastrophically, the Converger will automatically move the missing instances to other Cells.
     - participates in [auctions](https://github.com/cloudfoundry-incubator/auction) to accept Tasks/LRPs
-    - runs Tasks/LRPs by asking the Executor to create a container and run generic action recipes in said container.
+    - runs Tasks/LRPs by asking its in-process Executor to create a container and run generic action recipes in said container.
 - [**Executor**](https://github.com/cloudfoundry-incubator/executor)
-    - provides an HTTP API to create containers, run generic action recipes in said containers, and delete containers
     - the Executor doesn't know about the Task vs LRP distinction.  It is primarily responsible for implementing the generic executor actions detailed in the [API documentation](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md)
     - the Executor streams Stdout and Stderr to the metron-agent running on the Cell.  These then get forwarded to Loggregator.
 - [**Garden**](https://github.com/cloudfoundry-incubator/garden)
