@@ -369,10 +369,10 @@ Putting these APIs together we can paint a detailed picture of the transition pl
 - August:
     + Operators audit all running applications and identify applications that are *not* running on Diego
     + Operators e-mail developers that have not yet opted into Diego (this may occur several times leading up to the transition deadline)
+    + Operators set the default backend to Diego (`cc.default_to_diego_backend=true`)
 - September:
     + The public transition deadline has arrived
     + Operators revoke the ability for users to select which backend their applications run on (`cc.users_can_select_backend=false`)
-    + Operators set the default backend to Diego (`cc.default_to_diego_backend=true`)
     + Operators notify the remaining holdouts that their apps are going to be migrated to Diego
     + Operators begin transitioning none-Diego apps to Diego
 - Mid-September:
