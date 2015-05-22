@@ -49,7 +49,7 @@ Finally, note that Diego runs and manages Docker applications just like it runs 
 
 ## Pushing a Docker image with the Diego CLI plugin
 
-The [Diego CLI Plugin](#installing-the-diego-beta-cli-plugin) includes support for pushing a Docker image via CC.  For example:
+The [Diego CLI Plugin](migrating-to-diego.md#installing-the-diego-beta-cli-plugin) includes support for pushing a Docker image via CC.  For example:
 
 ```
 cf docker-push my-app cloudfoundry/lattice-app
