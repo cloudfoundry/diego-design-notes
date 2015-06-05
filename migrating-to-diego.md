@@ -31,7 +31,7 @@ This migration guide is made up of three sections:
 
 ## Targeting Diego
 
-App developers can ask CF to run their applications on Diego by setting the `diego` boolean on their application to `true`.  Applications with `diego=true` will stage and run on Diego.
+App developers can ask CF to run their applications on Diego by setting the `diego` boolean on their application to `true`.  Applications with `diego=true` will both stage and run on Diego.
 
 It is possible to modify the `diego` boolean on a running application.  This will cause it to transition from one backend to the other dynamically (though we make no guarantees around uptime).  The preferred approach is to perform a blue-green style deployment onto Diego.
 
@@ -39,9 +39,9 @@ The following instructions assume you have the `diego-beta` CLI plugin.  Instruc
 
 ### Installing the `diego-beta` CLI Plugin
 
-We have published a `cf` CLI plugin that makes opting into Diego easure.
+We have published a `cf` CLI plugin that makes opting into Diego easier.
 
-For CF CLI v6.10.0+ you can install from the CF-Community repo:
+For CF CLI v6.10.0+ you can install it from the CF-Community repo:
 
 ```
 cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
@@ -69,49 +69,48 @@ The `diego-beta` plugin includes subcommands to `enable-diego` and `disable-dieg
 
 ### Starting a new application on Diego
 
-To start a new application on Diego you must push the application *without starting it*.  Once created, you can set the `diego` boolean on the application and *then* start it.
+To start a new application on Diego you must push the application *without starting it*.  Once the app is created, you can set the `diego` boolean on it and *then* start it.
 
 1. Push the application without starting it:
 
-```
-cf push APPLICATION_NAME --no-start
-```
+    ```
+    cf push APPLICATION_NAME --no-start
+    ```
 
 2. Set the `diego` boolean:
 
-```
-cf enable-diego APPLICATION_NAME
-```
+    ```
+    cf enable-diego APPLICATION_NAME
+    ```
 
-> This is equivalent to cf ``curl /v2/apps/`cf app APPLICATION_NAME --guid` -X PUT -d '{"diego":true}'``
+    This is equivalent to running `cf curl /v2/apps/$(cf app APPLICATION_NAME --guid) -X PUT -d '{"diego":true}'`
 
 3. Start the application:
 
-```
-cf start APPLICATION_NAME
-```
+    ```
+    cf start APPLICATION_NAME
+    ```
 
 ### Transitioning an application between backends
 
-Simply setting the `diego` boolean:
+Simply setting the `diego` boolean via
 
 ```
 cf enable-diego APPLICATION_NAME
 ```
 
-will cause an existing application to transition to Diego.  The application will immediately start running on Diego and will *eventually* stop running on the DEAs.  While this gives some safety there are no strong guarantees around uptime.
+will cause an existing application to transition to Diego.  The application will immediately start running on Diego and will *eventually* stop running on the DEAs.  While this gives some safety, there are no strong guarantees around uptime.
 
-If you want to ensure uptime we recommend performing a blue-green deploy (i.e. push a copy of your application to Diego then swap routes and scale down the DEA application).
+If you want to ensure uptime we recommend performing a blue-green deploy (that is, push a copy of your application to Diego, then swap routes and scale down the DEA application).
 
-Note that you *must* ensure that the application has the correct stack when switching to Diego.  Diego, currently, runs a `lucid64` stack but there are plans to (very soon) transition to `trusty64` only.  Since a stack change necessitates a restage you must choose to either restage directly on Diego *or* restage on `trusty64` DEAs and then switch over the `diego:true` boolean.
 
-To transition back to the DEAs:
+To transition back to the DEAs, run
 
 ```
 cf disable-diego APPLICATION_NAME
 ```
 
-To tell which backend the application is targeting:
+To tell which backend the application is targeting, run
 
 ```
 cf has-diego-enabled APPLICATION_NAME
@@ -119,30 +118,31 @@ cf has-diego-enabled APPLICATION_NAME
 
 ### Running applications without routes
 
-For the DEA backend `cf push APP_NAME --no-routes` does two things:
+For the DEA backend, `cf push APP_NAME --no-route` does two things:
 
 - it skips creating and binding a route for the application
-- it (indirectly) causes the DEAs to skip the port healthcheck
+- it (indirectly) causes the DEAs to skip the port health-check on application startup
 
-> By default, when starting an application the DEAs wait until the application is listening on its assigned port *before* marking it as ready to receive traffic.  To determine whether or not to perform this check, the DEA peeks into the routes bound to the application and determines: if they're present the port check is performed.  If they're empty, no port check is performed.
+> By default, when starting an application the DEAs wait until the application is listening on its assigned port *before* marking it as ready to receive traffic.  To determine whether or not to perform this check, the DEA inspects the routes bound to the application and determines: if they're present the port check is performed.  If they're empty, no port check is performed.
 
-Diego does health checks [differently compared to the DEAs](#health-checks).  With Diego `cf push APP_NAME --no-routes` only skips creating and binding a route for the application.  It does not tell Diego which type of health check to perform.
+Diego configures its health checks [differently from the DEAs](#health-checks).  With Diego, `cf push APP_NAME --no-route` only skips creating and binding a route for the application.  It does not tell Diego which type of health check to perform.
 
-By default, Diego does the same port-based health check that the DEA performs.  If your applcation does *not* listen on a port (e.g. you are pushing a resque worker) then Diego will never see the application come up and will eventually mark it as crashed.  In these cases you must tell Diego to perform no health check:
+By default, Diego does the same port-based health check that the DEA performs.  If your application does *not* listen on a port (for example, if you are pushing a resque worker), then Diego will never see the application come up and will eventually mark it as crashed.  In these cases you must tell Diego to perform no health check:
 
 ```
 cf set-health-check APPLICATION_NAME none
 ```
 
-Note: there are two valid values for the health check: `port` and `none`.  `port` is the default.  You can get the current health check via
+Note: the two valid values for the health check are currently `port` and `none`, with `port` the default.  You can get the current health check for your application via
 
 ```
 cf get-health-check APPLICATION_NAME
 ```
 
+
 ### Recognizing capacity issues
 
-The Cloud Controller is responsible for scheduling applications on the DEAs.  With Diego this responsibility shifts entirely to Diego.  As a result, the Cloud Controller does not know, ahead of time, whether or not there is capacity to stage/run the application.  Instead, this information (referred to as a placement error) is available *asynchronously* and comes from Diego via the `cf app` API.
+The Cloud Controller is responsible for scheduling applications on the DEAs.  With Diego this responsibility shifts entirely to Diego.  As a result, the Cloud Controller does not know, ahead of time, whether or not there is capacity to stage or to run the application.  Instead, this information (referred to as a *placement error*) is available *asynchronously* and comes from Diego via the `cf app` API.
 
 The CLI has already been updated to:
 
@@ -168,7 +168,7 @@ Diego, being a generic container runtime, does not treat buildpacks in a special
 
 ##### Workarounds
 
-The simplest way to speed up staging performance is to specify a particular buildpack via the `-b` flag on `cf push`.  This will cause Diego to only fetch and copy in the single specified buildpack.  For example:
+The simplest way to speed up staging performance is to specify a particular buildpack via the `-b` flag on `cf push`.  This will cause Diego to only fetch and copy in the single specified buildpack.  For example,
 
 ```
 cf push my-app -b ruby_buildpack --no-start
@@ -176,7 +176,7 @@ cf enable-diego my-app
 cf start
 ```
 
-Will stage the requested application using only the Ruby buildpack.
+will stage the requested application using only the Ruby buildpack.
 
 ##### Future plans
 
@@ -210,9 +210,9 @@ We believe this solves a host of problems by building on top of an established, 
 
 The DEAs perform a single health check when launching an application.  This health is used to verify that the application is "up" before routing to it.  The default health check simply checks that the application has started listening on `$PORT`.  Once the application is up the DEA no longer performs any health checks.  The application is considered crashed *only* when it exits.  As mentioned [above](#running-applications-without-routes) applications with no associated routes aren't health-checked at all.
 
-Diego does health checks differently.  Like the DEAs, Diego performs the health check to identify when the application is "up".  Diego *continues* to perform the health check (every 30 seconds) after the application comes up.  This allows Diego to identify stuck applications - applications that may still be running but are (actually) in an unhealthy state - and restart them.
+Diego does health checks differently.  Like the DEAs, Diego performs the health check to identify when the application is "up".  Diego *continues* to perform the health check (every 30 seconds) after the application comes up.  This allows Diego to identify stuck applications -- applications that may still be running but are actually in a degraded state -- and restart them.
 
-Currently Diego supports a port-based health check (like the DEAs).  However, Diego's health check is completely generic (Diego simply runs a process in the container periodically - if the process exits succesfully the application is considered healthy).  There are plans to support URL-based health checks.  We can also support launching arbitrary binaries to allow users to perform custom health checks.
+Currently Diego supports a port-based health check (like the DEAs).  However, Diego's health check is completely generic: Diego simply runs a process in the container periodically, and if the process exits succesfully the application is considered healthy.  There are plans to support URL-based health checks and, potentially, arbitrary custom health-check commands.
 
 Applications that do not listen on a port will need to disable the health check.  This is described [above](#running-applications-without-routes).
 
@@ -233,7 +233,7 @@ However, because Diego supports health checks it will be possible to identify co
 
 *Diego stops restarting crashed applications eventually:*
 
-Our experience with large installations of CF is that there are a sizable number of applications that repeatedly crash and never fail to stay up.  (e.g. poorly written hello world applications).  These place a strain on the installation and consume unnecessary resources.  Diego attempts to restart these applications for ~2 days but then gives up on them.
+Our experience with large installations of CF is that there are a sizable number of applications that repeatedly crash and never fail to stay up.  (e.g. poorly written hello world applications).  These place a strain on the installation and consume unnecessary resources.  Diego attempts to restart these applications for approximately 2 days but then gives up on them.
 
 ##### Workarounds
 
