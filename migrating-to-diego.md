@@ -291,9 +291,6 @@ If you absolutely must have 100% uptime during the beta period we recommend clon
 
 Diego already ensures that applications remain available during a rolling deploy.  As we get closer to a final candidate we will introduce infrastructure to ensure that backward incompatible changes are migrated appropriately.
 
-### Application Metrics
-
-Diego passes Application Metrics (CPU/Memory/Disk usage) to Loggregator.  The latest (currently "unstable") release of the `cf` CLI knows how to fetch metrics from Loggregator (via `cf app`).  Consumers previously relying on the CC API for metrics will have to change to fetch these metrics from Loggregator instead.  We may backport support for the CC API though this is not currently a priority.
 
 ## Managing the Migration
 
