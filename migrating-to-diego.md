@@ -20,7 +20,6 @@ This migration guide is made up of three sections:
     + [Environment Variables](#environment-variables)
     + [Mixed Instances](#mixed-instances)
     + [Uptime During Deploys](#uptime-during-deploys)
-    + [Application Metrics](#application-metrics)
 - [Managing the Migration](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches
     + [The Importance of Communication](#the-importance-of-communication)
     + [Auditing Applications](#auditing-applications)
