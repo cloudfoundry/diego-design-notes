@@ -57,4 +57,4 @@ cf docker-push my-app cloudfoundry/lattice-app
 
 will push the image located at `cloudfoundry/lattice-app`.
 
-Note that you will need to set the `cc.diego_docker` property to `true` in your CF-Release manifest to enable Docker support in the CC.
+Note that you will need to `cf enable-feature-flag diego_docker` to enable Docker support in the CC.
