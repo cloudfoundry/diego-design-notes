@@ -4,7 +4,8 @@ These are design notes intended to convey how the various components of Diego co
 
 ## Migrating to Diego
 
-Diego is getting close to production readiness!  We've put together some [guidelines](migrating-to-diego.md) around transitioning applications off of the DEAs and onto Diego.
+Diego is getting close to production readiness!  We've put together some [guidelines](migrating-to-diego.md) around transitioning applications off of the DEAs and onto Diego. One reason to move your apps to Diego is to [try out SSH access to your CF app instances and Diego LRPs](ssh-access-and-policy.md).
+
 
 ## What does Diego do?
 
