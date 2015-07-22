@@ -100,7 +100,7 @@ The following BOSH properties are relevant for SSH configuration in [cf-release]
 - `app_ssh.port`: Port of the externally routable SSH endpoint advertised through the Cloud Controller info endpoint.
 - `cc.allow_app_ssh_access`: As mentioned above, whether to allow SSH access at all for CF app instances.
 
-If SSH access is allowed for the CF deployment, Cloud Controller will advertise the SSH endpoint to be `ssh.<system-domain>`, accepting traffic on the port given in `app_ssh.port`.
+If SSH access is allowed for the CF deployment, Cloud Controller will advertise the SSH endpoint to be `ssh.<system-domain>`, accepting traffic on the port given in `app_ssh.port`. Cloud Controller's `/v2/info` endpoint provides this SSH endpoint in its `app_ssh_endpoint` field and the host key fingerprint above in its `app_ssh_host_key_fingerprint` field.
 
 
 ### SSH Load Balancer configuration
