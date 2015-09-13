@@ -218,3 +218,9 @@ Diego-Release is also the **canonical** `GOPATH` for the Diego. All Diego develo
     - provides a consistent key-value store for maintenance of distributed locks and component presence.
 - [**Consuladapter**](https://github.com/cloudfoundry-incubator/consuladapter)
     - provides a driver for interfacing with etcd.
+- **Volume**: A disk resource available to an application instance. Instance from multiple applications can mount the same volume
+    - Fixed volumes: Scheduled on each individual cells. i.e local disk storage
+      - They are tied to a single host/cell.
+    - Floating volumes: Available on all Cell clusters e.g NFS, Gluster, EBS etc
+- **Volume Set**: A group of volumes scheduled to match the resource needs of the application bound to it.
+- **Volume Manager/Scheduler**: A Cell component that abstracts away the wiz-biz regarding the lifecycle of individual volumes
