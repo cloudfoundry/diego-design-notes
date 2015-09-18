@@ -276,9 +276,9 @@ None
 
 Diego's restart policy is currently static.  There are plans to make it configurable on a space-by-space level.  This is discussed at length on [vcap-dev](https://groups.google.com/a/cloudfoundry.org/forum/#!topic/vcap-dev/tJTIkoD8__o/discussion) with stories beginning [here](https://www.pivotaltracker.com/story/show/87479698).
 
-### Environment Variables
+### Environment Variable Interpolation
 
-Diego does not interpolate environment variables (i.e. referring to one environment variable in another via `$` will not work).  We'd like to see if this is, in fact, an issue for people.  If you have trouble because of this please reach out on vcap-dev and we can look into workarounds/fixes.
+Diego does not interpolate environment variables (i.e. referring to one environment variable in another via `$` will not work).  We'd like to see if this is, in fact, an issue for people.  If you have trouble because of this please reach out on cf-dev and we can look into workarounds/fixes.
 
 ### Mixed Instances
 
