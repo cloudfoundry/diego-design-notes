@@ -232,9 +232,6 @@ The DEAs currently set this environment variable to `0.0.0.0` in all cases.
 This environment variable is deprecated. Apps should now use `PORT` or `CF_INSTANCE_PORT` instead.
 
 
-##### Future Plans
-
-
 ##### Workarounds
 
 - Users can set `VCAP_APP_HOST` in their app's environment variables if needed, but it is recommended to migrate away from this variable.
