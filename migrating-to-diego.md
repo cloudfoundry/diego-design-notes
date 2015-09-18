@@ -205,6 +205,40 @@ We are planning on providing full-blown SSH access to running containers.  The i
 
 We believe this solves a host of problems by building on top of an established, and secure, protocol.
 
+### CF-Specific Environment Variables
+
+Cloud Foundry supplies certain environment variables to app instances running on the DEAs, as documented [here](http://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html). These environment variables differ slightly for app instances running on Diego.
+
+
+#### `VCAP_APPLICATION`
+
+There are a few entries in the `VCAP_APPLICATION` payload that are not provided on Diego:
+
+- `application_uris` and its undocumented alias `uris`: These are not guaranteed to be correct even on the DEAs, if an app ever has routes mapped or unmapped to it after starting. Since Diego explicitly makes it possible to change routes on a running app without restarting it, it makes no sense to expose possibly incorrect route information to the app as a value encoded in a static environment variable.
+- `users`: This value has apparently been `null` since some time in 2012.
+- `started_at_timestamp` and `state_timestamp`: Time at which the instance is considered started, in Unix epoch time format.
+- `started_at` and `start`: Same as `started_at_timestamp`, but in human-readable format.
+
+
+
+#### `VCAP_APP_HOST`
+
+The DEAs currently set this environment variable to `0.0.0.0` in all cases.
+
+
+#### `VCAP_APP_PORT`
+
+This environment variable is deprecated. Apps should now use `PORT` or `CF_INSTANCE_PORT` instead.
+
+
+##### Future Plans
+
+
+##### Workarounds
+
+- Users can set `VCAP_APP_HOST` in their app's environment variables if needed, but it is recommended to migrate away from this variable.
+
+
 ### Health Checks
 
 The DEAs perform a single health check when launching an application.  This health is used to verify that the application is "up" before routing to it.  The default health check simply checks that the application has started listening on `$PORT`.  Once the application is up the DEA no longer performs any health checks.  The application is considered crashed *only* when it exits.  As mentioned [above](#running-applications-without-routes) applications with no associated routes aren't health-checked at all.
