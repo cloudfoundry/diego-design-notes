@@ -15,9 +15,10 @@ This migration guide is made up of three sections:
 - [Diego Deltas](#diego-deltas) describes the differences between Diego and the DEAs
     + [Staging Performance](#staging-performance)
     + [Files API](#files-api)
+    + [CF-Specific Environment Variables](cf-specific-environment-variables)
     + [Health Checks](#health-checks)
     + [Behavior of Crashing Applications](#behavior-of-crashing-applications)
-    + [Environment Variables](#environment-variables)
+    + [Environment Variable Interpolation](#environment-variable-interpolation)
     + [Mixed Instances](#mixed-instances)
     + [Uptime During Deploys](#uptime-during-deploys)
 - [Managing the Migration](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches
