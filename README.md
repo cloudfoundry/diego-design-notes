@@ -15,7 +15,7 @@ Diego schedules and runs *Tasks* and *Long-Running Processes*:
 
 - A **Long-Running Process** (LRP) may have multiple instances. Diego is told of the *desired LRPs*. Each desired LRP may desire multiple instances, which Diego represents as *actual LRPs*. Diego attempts to keep the correct number of instances running in the face of network failures and crashes.
 
-Clients submit, update, and retrieve Tasks and LRPs to the [BBS](https://github.com/cloudfoundry-incubator/runtime-schema) (Bulletin Board System) via an RPC-style API over HTTP. The [Receptor](https://github.com/cloudfoundry-incubator/receptor) also provides a more developer-friendly, [RESTful, JSON-encoded API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md) adapter for the BBS API. Diego's [Auctioneer](https://github.com/cloudfoundry-incubator/auctioneer) optimally distributes Tasks and LRPs to the cluster of Diego Cells via an [Auction](https://github.com/cloudfoundry-incubator/auction) that queries and then sends work to the Cell [Rep](https://github.com/cloudfoundry-incubator/rep)s. Once the auction assigns a Task or LRP to a Cell, the [Executor](https://github.com/cloudfoundry-incubator/executor) creates a [Garden](https://github.com/cloudfoundry-incubator/garden) container and executes the work encoded in the Task/LRP. This work is encoded as a generic, platform-independent recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
+Clients submit, update, and retrieve Tasks and LRPs to the [BBS](https://github.com/cloudfoundry-incubator/runtime-schema) (Bulletin Board System) via an RPC-style API over HTTP. Diego's [Auctioneer](https://github.com/cloudfoundry-incubator/auctioneer) optimally distributes Tasks and LRPs to the cluster of Diego Cells via an [Auction](https://github.com/cloudfoundry-incubator/auction) that queries and then sends work to the Cell [Rep](https://github.com/cloudfoundry-incubator/rep)s. Once the auction assigns a Task or LRP to a Cell, the [Executor](https://github.com/cloudfoundry-incubator/executor) creates a [Garden](https://github.com/cloudfoundry-incubator/garden) container and executes the work encoded in the Task/LRP. This work is encoded as a generic, platform-independent recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
 
 The BBS also provides a real-time representation of the state of the Diego cluster (including all desired LRPs, running LRP instances, and in-flight Tasks). The [Converger](https://github.com/cloudfoundry-incubator/converger) periodically analyzes snapshots of this representation and corrects discrepancies, ensuring that Diego is eventually consistent.
 
@@ -132,10 +132,6 @@ Only the Rep communicates with the BBS.
 
 ### Components on the Access VMs
 
-- [**Receptor**](https://github.com/cloudfoundry-incubator/receptor)
-    - implements a RESTful [HTTP API](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/README.md) that allows consumers of Diego to:
-        + request Task and DesiredLRPs
-        + fetch information about currently running Tasks and LRP instances
 - [**File-Server**](https://github.com/cloudfoundry-incubator/file-server)
     - serves static assets used by our various components.  In particular, it serves the App Lifecycle binaries (see [below](#app-lifecycles)).
 - [**SSH Proxy**](https://github.com/cloudfoundry-incubator/diego-ssh)
@@ -187,10 +183,6 @@ Current implementations:
 
 Diego is made of very many disparate components.  Ensuring that these components work together correctly is a challenge addressed by these entities:
 
-- [**Runtime-Schema**](https://github.com/cloudfoundry-incubator/runtime-schema)
-    - encodes all communication between Diego components and the BBS.  The Receptor, Rep, and Converger are the primary consumers of Runtime-Schema.
-    - access to the consistent store is mediated via the BBS.  The BBS is comprised of several domain-specific sub-BBS packages.  Each Diego component is then given a *view* into the BBS (implemented as a Golang interface) to clarify the role and responsibility of the component.
-    - the models by which components communicate are encoded in the models package.
 - [**Inigo**](https://github.com/cloudfoundry-incubator/inigo)
     - is an integration test suite that launches the various Diego components and excercises them through various test cases.  As such, Inigo *validates* that a given set of component versions are mutually compatible.
     - in addition to excercising various *non-exceptional* test cases, Inigo can excercise exceptional cases (e.g. when a component fails).
