@@ -209,4 +209,4 @@ Diego-Release is also the **canonical** `GOPATH` for the Diego. All Diego develo
     - provides a dynamic service registration and load balancing via DNS resolution.
     - provides a consistent key-value store for maintenance of distributed locks and component presence.
 - [**Consuladapter**](https://github.com/cloudfoundry-incubator/consuladapter)
-    - provides a driver for interfacing with etcd.
+    - provides a driver for interfacing with consul.
