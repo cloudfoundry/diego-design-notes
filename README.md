@@ -31,13 +31,9 @@ Diego is the next-generation runtime powering Cloud Foundry (CF), but Diego is a
 
 ## What are all these repos and what do they do?
 
-Here's a diagrammatic overview (*warning: diagram is out of date*).  Ingest it slowly as you read through this section.
+Below is a diagrammatic overview (also [PDF](https://github.com/cloudfoundry-incubator/diego-design-notes/raw/master/diego-overview.pdf) &middot; [clickable map](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)).  Ingest it slowly as you read through this section.
 
 [![Diego Overview](./diego-overview.png)](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
-
-Here's a [PDF](https://github.com/cloudfoundry-incubator/diego-design-notes/raw/master/diego-overview.pdf) version.
-
-Here's a [clickable image map](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
 This diagram includes all the major repositories/components associated with Diego.
 
