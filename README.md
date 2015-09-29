@@ -15,7 +15,7 @@ Diego schedules and runs *Tasks* and *Long-Running Processes*:
 
 - A **Long-Running Process** (LRP) may have multiple instances. Diego is told of the *desired LRPs*. Each desired LRP may desire multiple instances, which Diego represents as *actual LRPs*. Diego attempts to keep the correct number of instances running in the face of network failures and crashes.
 
-Clients submit, update, and retrieve Tasks and LRPs to the [BBS](https://github.com/cloudfoundry-incubator/runtime-schema) (Bulletin Board System) via an RPC-style API over HTTP. Diego's [Auctioneer](https://github.com/cloudfoundry-incubator/auctioneer) optimally distributes Tasks and LRPs to the cluster of Diego Cells via an [Auction](https://github.com/cloudfoundry-incubator/auction) that queries and then sends work to the Cell [Rep](https://github.com/cloudfoundry-incubator/rep)s. Once the auction assigns a Task or LRP to a Cell, the [Executor](https://github.com/cloudfoundry-incubator/executor) creates a [Garden](https://github.com/cloudfoundry-incubator/garden) container and executes the work encoded in the Task/LRP. This work is encoded as a generic, platform-independent recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
+Clients submit, update, and retrieve Tasks and LRPs to the [BBS](https://github.com/cloudfoundry-incubator/bbs) (Bulletin Board System) via an RPC-style API over HTTP. Diego's [Auctioneer](https://github.com/cloudfoundry-incubator/auctioneer) optimally distributes Tasks and LRPs to the cluster of Diego Cells via an [Auction](https://github.com/cloudfoundry-incubator/auction) that queries and then sends work to the Cell [Rep](https://github.com/cloudfoundry-incubator/rep)s. Once the auction assigns a Task or LRP to a Cell, the [Executor](https://github.com/cloudfoundry-incubator/executor) creates a [Garden](https://github.com/cloudfoundry-incubator/garden) container and executes the work encoded in the Task/LRP. This work is encoded as a generic, platform-independent recipe of composable [actions](https://github.com/cloudfoundry-incubator/receptor/blob/master/doc/actions.md).
 
 The BBS also provides a real-time representation of the state of the Diego cluster (including all desired LRPs, running LRP instances, and in-flight Tasks). The [Converger](https://github.com/cloudfoundry-incubator/converger) periodically analyzes snapshots of this representation and corrects discrepancies, ensuring that Diego is eventually consistent.
 
@@ -81,7 +81,7 @@ The CC-Bridge components interact with the Cloud Controller.  They serve, primar
 
 The Database VMs provide Diego's core components and clients a consistent API to the shared state and operations that manage Tasks and LRPs, as well as the data store for that shared state.
 
-- [**BBS**](https://github.com/cloudfoundry-incubator/stager)
+- [**BBS**](https://github.com/cloudfoundry-incubator/bbs)
     - provides an RPC-style API over HTTP to both core Diego components (rep, auctioneer, converger) and external clients (receptor, SSH proxy, CC-bridge, route emitter).
     - encapsulates access to the backing database and manages data migrations, encoding, and encryption.
 - [**ETCD**](https://github.com/coreos/etcd)
