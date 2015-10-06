@@ -215,11 +215,11 @@ Cloud Foundry supplies certain environment variables to app instances running on
 
 There are a few entries in the `VCAP_APPLICATION` payload that are not provided on Diego:
 
-- `application_uris` and its undocumented alias `uris`: These are not guaranteed to be correct even on the DEAs, if an app ever has routes mapped or unmapped to it after starting. Since Diego explicitly makes it possible to change routes on a running app without restarting it, it makes no sense to expose possibly incorrect route information to the app as a value encoded in a static environment variable.
 - `users`: This value has apparently been `null` since some time in 2012.
 - `started_at_timestamp` and `state_timestamp`: Time at which the instance is considered started, in Unix epoch time format.
 - `started_at` and `start`: Same as `started_at_timestamp`, but in human-readable format.
 
+Additionally, while Diego does now provide `application_uris` and its undocumented alias `uris` in the `VCAP_APPLICATION` payload, the values will always be stale if routes are mapped or unmapped form the app after its latest restart. On the DEAs, these values may be out of date, but will eventually converge as individual application instances restart. To guarantee that an app has the current list of URIs, it must be restarted via Cloud Controller (so that Diego receives a new DesiredLRP specification with updated `VCAP_APPLICATION` fields).
 
 
 #### `VCAP_APP_HOST`
@@ -234,7 +234,7 @@ This environment variable is deprecated. Apps should now use `PORT` or `CF_INSTA
 
 ##### Workarounds
 
-- Users can set `VCAP_APP_HOST` in their app's environment variables if needed, but it is recommended to migrate away from this variable.
+- Unfortunately, Cloud Controller disallows users from setting the `VCAP_APP_HOST` environment variable on an app, or indeed any environment variable prefixed with `VCAP_`. It is recommended that you migrate away from the `VCAP_APP_HOST` environment variable, especially as it no longer provides useful information for the app instance.
 
 
 ### Health Checks
