@@ -290,7 +290,7 @@ Diego does not allow this behavior.
 
 ##### Why?
 
-Diego is actually very opinionated about what can change about a running application.  Currently, only routes and the number of instances can be modified without restarting the application.  Any other changes (e.g. changes to environment variables, start commands, etc.) necessarily require a restart.
+Diego is actually very opinionated about what can change about a running application.  Currently, only routes and the number of instances can be modified without restarting the application.  Any other changes (e.g., changes to environment variables, start commands, and bound services ) necessarily require a restart.
 
 Diego does not orchestrate this restart for you - it leaves it to the user to bring up new instances and bring down old instances.  This is the safest way to correctly and safely transition applications between configurations without causing downtime.
 
@@ -298,7 +298,7 @@ Diego does not orchestrate this restart for you - it leaves it to the user to br
 
 Always use a green-blue deploy strategy when modifying anything about a running application.  If you'd like some instances of an application to have different configuration than other instances you should, instead, stage and deploy two different applications.
 
-> Alternatively you can use the `INSTANCE_INDEX` environment variable to dynamically change your applications behavior based on its instance number.  This is not recommended.
+> Alternatively you can use the `INSTANCE_INDEX` environment variable to dynamically change your application's behavior based on its instance number.  This is not recommended.
 
 ##### Future plans
 
