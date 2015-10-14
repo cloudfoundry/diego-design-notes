@@ -20,6 +20,7 @@ This migration guide is made up of three sections:
     + [Behavior of Crashing Applications](#behavior-of-crashing-applications)
     + [Environment Variable Interpolation](#environment-variable-interpolation)
     + [Mixed Instances](#mixed-instances)
+    + [Disk Quota Over-Enforcement during Container Setup](#disk-quota-over-enforcement-during-container-setup)
 - [Managing the Migration](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches
     + [The Importance of Communication](#the-importance-of-communication)
     + [Auditing Applications](#auditing-applications)
@@ -302,6 +303,22 @@ Always use a green-blue deploy strategy when modifying anything about a running 
 ##### Future plans
 
 None
+
+### Disk Quota Over-Enforcement during Container Setup
+
+When copying files into its containers, the Garden-Linux backend may end up over-reporting the amount of disk used in the container. If this disk usage exceeds the quota allocated to the container, the copying-in operation will fail, and the container will crash. If you see crash events for your CF app with the exit description, "Copying into the container failed", this quota issue is likely the cause.
+
+This erroneous reporting appears to be an interaction between the how the backing filesystem that garden-linux uses for container images accounts for disk usage and how payloads are streamed into the container. Once the payloads have been copied in successfully, the disk usage is eventually reported accurately (or even as less than expected, due to the backing filesystem's ability to de-duplicate some data in the files it stores).
+
+
+##### Workarounds
+
+Application developers can increase the amount of disk allocated to their application instances. As a rule of thumb, try allocating a disk amount at least twice the size of the unpacked application droplet (which can be determined by the disk usage reported when running on the DEAs).
+
+To accommodate the resulting increase in the disk amounts allocated to instances, platform operators can allocate more disk to their cells, or can tune the reps to report more available disk than is actually present on the Cell VMs. This is effectively overcommitting disk on the Cells.
+Platform operators may also need to increase the maximum allowed disk quota for an app instance in the Cloud Controller configuration, via the `cc.maximum_app_disk_in_mb` BOSH property in the CF deployment manifest, especially if apps over 1 GB in size are running on the deployment.
+
+The Diego and Garden teams are still investigating the exact behavior and causes of this usage over-reporting, and would appreciate feedback, data points comparing droplet size with required minimum disk quota, and even test assets from the community as developers and operators encounter problems with the disk usage.
 
 
 ## Managing the Migration
