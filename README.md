@@ -1,10 +1,11 @@
 # Diego Design Notes
 
-These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is not guaranteed to be up-to-date.  If you find something that you suspect is not up-to-date please [open an issue](https://github.com/cloudfoundry-incubator/diego-design-notes/issues).
+These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is generally up-to-date, although not guaranteed to be.  If you find something that you suspect is not up-to-date, please [open an issue](https://github.com/cloudfoundry-incubator/diego-design-notes/issues) on this repository.
+
 
 ## Migrating to Diego
 
-Diego is getting close to production readiness!  We've put together some [guidelines](migrating-to-diego.md) around transitioning applications off of the DEAs and on to Diego. One reason to move your apps to Diego is to [try out SSH access to your CF app instances and Diego LRPs](ssh-access-and-policy.md).
+We've put together some [guidelines](migrating-to-diego.md) around transitioning applications off of the DEAs and on to Diego. One reason to move your apps to Diego is to [try out SSH access to your CF app instances and Diego LRPs](ssh-access-and-policy.md).
 
 
 ## What does Diego do?
@@ -161,6 +162,7 @@ Diego is largely platform-agnostic.  All platform-specific concerns are delegate
 Current implementations:
 
 - [**Garden-Linux**](https://github.com/cloudfoundry-incubator/garden-linux) provides a linux-specific implementation of a Garden interface.
+- [**Garden-Windows**](https://github.com/cloudfoundry-incubator/garden-windows) provides a Windows-specific implementation of a Garden interface.
 
 #### App Lifecycles
 
@@ -174,6 +176,7 @@ Current implementations:
 
 - [**Buildpack-App-Lifecycle**](https://github.com/cloudfoundry-incubator/buildpack-app-lifecycle) implements a traditional buildpack-based lifecycle.
 - [**Docker-App-Lifecycle**](https://github.com/cloudfoundry-incubator/docker-app-lifecycle) implements a docker-based lifecycle.
+- [**Windows-App-Lifecycle**](https://github.com/cloudfoundry-incubator/windows-app-lifecycle) implements a lifecycle for .NET applications on Windows.
 
 ### Bringing it all together
 
