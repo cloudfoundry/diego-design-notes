@@ -10,7 +10,7 @@ This migration guide is made up of three sections:
     + [Installing the `diego-beta` CLI Plugin](#installing-the-diego-beta-cli-plugin)
     + [Starting a new application on Diego](#starting-a-new-application-on-diego)
     + [Transitioning an application between backends](#transitioning-an-application-between-backends)
-    + [Running route-less applications (such as workers and schedulers)](#running-applications-without-routes)
+    + [Running route-less applications (such as workers and schedulers)](#running-route-less-applications-such-as-workers-and-schedulers)
     + [Recognizing capacity issues](#recognizing-capacity-issues)
 - [Diego Deltas](#diego-deltas) describes the differences between Diego and the DEAs
     + [Staging Performance](#staging-performance)
