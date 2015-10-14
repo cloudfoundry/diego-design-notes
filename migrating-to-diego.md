@@ -6,22 +6,22 @@ With that said, there are a handful of differences between Diego and the DEAs.  
 
 This migration guide is made up of three sections:
 
-- [Targeting Diego](#targeting-diego) is intended for *developers* and describes the API calls necessary to run on Diego
+- [**Targeting Diego**](#targeting-diego) is intended for *developers* and describes the API calls necessary to run on Diego.
     + [Installing the `diego-beta` CLI Plugin](#installing-the-diego-beta-cli-plugin)
     + [Starting a new application on Diego](#starting-a-new-application-on-diego)
     + [Transitioning an application between backends](#transitioning-an-application-between-backends)
     + [Running route-less applications (such as workers and schedulers)](#running-route-less-applications-such-as-workers-and-schedulers)
     + [Recognizing capacity issues](#recognizing-capacity-issues)
-- [Diego Deltas](#diego-deltas) describes the differences between Diego and the DEAs
+- [**Diego Deltas**](#diego-deltas) describes known differences between Diego and the DEAs.
     + [Staging Performance](#staging-performance)
     + [Files API](#files-api)
     + [CF-Specific Environment Variables](#cf-specific-environment-variables)
+    + [Disk Quota Over-Enforcement during Container Setup](#disk-quota-over-enforcement-during-container-setup)
     + [Health Checks](#health-checks)
     + [Behavior of Crashing Applications](#behavior-of-crashing-applications)
     + [Environment Variable Interpolation](#environment-variable-interpolation)
     + [Mixed Instances](#mixed-instances)
-    + [Disk Quota Over-Enforcement during Container Setup](#disk-quota-over-enforcement-during-container-setup)
-- [Managing the Migration](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches
+- [**Managing the Migration**](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches.
     + [The Importance of Communication](#the-importance-of-communication)
     + [Auditing Applications](#auditing-applications)
     + [Controlling Access to the Diego Boolean](#controlling-access-to-the-diego-boolean)
@@ -237,6 +237,23 @@ This environment variable is deprecated. Apps should now use `PORT` or `CF_INSTA
 - Unfortunately, Cloud Controller disallows users from setting the `VCAP_APP_HOST` environment variable on an app, or indeed any environment variable prefixed with `VCAP_`. It is recommended that you migrate away from the `VCAP_APP_HOST` environment variable, especially as it no longer provides useful information for the app instance.
 
 
+### Disk Quota Over-Enforcement during Container Setup
+
+When copying a droplet, a buildpack, or other assets into a container, the Garden-Linux backend may end up over-reporting the amount of disk used in that container. If this disk usage exceeds the quota allocated to the container, the copying-in operation will fail, and the container will crash. If you see crash events for your CF app with the exit description, "Copying into the container failed", this quota issue is likely the cause.
+
+This erroneous reporting appears to be an interaction between the how the backing filesystem that garden-linux uses for container images accounts for disk usage and how payloads are streamed into the container. Once the payloads have been copied in successfully, the disk usage is eventually reported accurately (or even as less than expected, due to the backing filesystem's ability to de-duplicate some data in the files it stores).
+
+
+##### Workarounds
+
+Application developers can increase the amount of disk allocated to their application instances. As a rule of thumb, try allocating a disk amount at least twice the size of the unpacked application droplet (which can be determined by the disk usage reported when running on the DEAs).
+
+To accommodate the resulting increase in the disk amounts allocated to instances, platform operators can allocate more disk to their cells, or can tune the reps to report more available disk than is actually present on the Cell VMs. This is effectively overcommitting disk on the Cells.
+Platform operators may also need to increase the maximum allowed disk quota for an app instance in the Cloud Controller configuration, via the `cc.maximum_app_disk_in_mb` BOSH property in the CF deployment manifest, especially if apps over 1 GB in size are running on the deployment.
+
+The Diego and Garden teams are still investigating the exact behavior and causes of this usage over-reporting, and would appreciate feedback, data points comparing droplet size with required minimum disk quota, and even test assets from the community as developers and operators encounter problems with the disk usage.
+
+
 ### Health Checks
 
 The DEAs perform a single health check when launching an application.  This health is used to verify that the application is "up" before routing to it.  The default health check simply checks that the application has started listening on `$PORT`.  Once the application is up the DEA no longer performs any health checks.  The application is considered crashed *only* when it exits.  As mentioned [above](#running-applications-without-routes) applications with no associated routes aren't health-checked at all.
@@ -303,23 +320,6 @@ Always use a green-blue deploy strategy when modifying anything about a running 
 ##### Future plans
 
 None
-
-
-### Disk Quota Over-Enforcement during Container Setup
-
-When copying a droplet, a buildpack, or other assets into a container, the Garden-Linux backend may end up over-reporting the amount of disk used in that container. If this disk usage exceeds the quota allocated to the container, the copying-in operation will fail, and the container will crash. If you see crash events for your CF app with the exit description, "Copying into the container failed", this quota issue is likely the cause.
-
-This erroneous reporting appears to be an interaction between the how the backing filesystem that garden-linux uses for container images accounts for disk usage and how payloads are streamed into the container. Once the payloads have been copied in successfully, the disk usage is eventually reported accurately (or even as less than expected, due to the backing filesystem's ability to de-duplicate some data in the files it stores).
-
-
-##### Workarounds
-
-Application developers can increase the amount of disk allocated to their application instances. As a rule of thumb, try allocating a disk amount at least twice the size of the unpacked application droplet (which can be determined by the disk usage reported when running on the DEAs).
-
-To accommodate the resulting increase in the disk amounts allocated to instances, platform operators can allocate more disk to their cells, or can tune the reps to report more available disk than is actually present on the Cell VMs. This is effectively overcommitting disk on the Cells.
-Platform operators may also need to increase the maximum allowed disk quota for an app instance in the Cloud Controller configuration, via the `cc.maximum_app_disk_in_mb` BOSH property in the CF deployment manifest, especially if apps over 1 GB in size are running on the deployment.
-
-The Diego and Garden teams are still investigating the exact behavior and causes of this usage over-reporting, and would appreciate feedback, data points comparing droplet size with required minimum disk quota, and even test assets from the community as developers and operators encounter problems with the disk usage.
 
 
 ## Managing the Migration
