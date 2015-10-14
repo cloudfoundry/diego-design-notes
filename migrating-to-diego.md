@@ -304,9 +304,10 @@ Always use a green-blue deploy strategy when modifying anything about a running 
 
 None
 
+
 ### Disk Quota Over-Enforcement during Container Setup
 
-When copying files into its containers, the Garden-Linux backend may end up over-reporting the amount of disk used in the container. If this disk usage exceeds the quota allocated to the container, the copying-in operation will fail, and the container will crash. If you see crash events for your CF app with the exit description, "Copying into the container failed", this quota issue is likely the cause.
+When copying a droplet, a buildpack, or other assets into a container, the Garden-Linux backend may end up over-reporting the amount of disk used in that container. If this disk usage exceeds the quota allocated to the container, the copying-in operation will fail, and the container will crash. If you see crash events for your CF app with the exit description, "Copying into the container failed", this quota issue is likely the cause.
 
 This erroneous reporting appears to be an interaction between the how the backing filesystem that garden-linux uses for container images accounts for disk usage and how payloads are streamed into the container. Once the payloads have been copied in successfully, the disk usage is eventually reported accurately (or even as less than expected, due to the backing filesystem's ability to de-duplicate some data in the files it stores).
 
