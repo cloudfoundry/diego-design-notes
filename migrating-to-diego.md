@@ -10,7 +10,7 @@ This migration guide is made up of three sections:
     + [Installing the `diego-beta` CLI Plugin](#installing-the-diego-beta-cli-plugin)
     + [Starting a new application on Diego](#starting-a-new-application-on-diego)
     + [Transitioning an application between backends](#transitioning-an-application-between-backends)
-    + [Running applications without routes](#running-applications-without-routes)
+    + [Running route-less applications (such as workers and schedulers)](#running-applications-without-routes)
     + [Recognizing capacity issues](#recognizing-capacity-issues)
 - [Diego Deltas](#diego-deltas) describes the differences between Diego and the DEAs
     + [Staging Performance](#staging-performance)
@@ -116,7 +116,7 @@ To tell which backend the application is targeting, run
 cf has-diego-enabled APPLICATION_NAME
 ```
 
-### Running applications without routes
+### Running route-less applications (such as workers and schedulers)
 
 For the DEA backend, `cf push APP_NAME --no-route` does two things:
 
@@ -245,7 +245,7 @@ Diego does health checks differently.  Like the DEAs, Diego performs the health 
 
 Currently Diego supports a port-based health check (like the DEAs).  However, Diego's health check is completely generic: Diego simply runs a process in the container periodically, and if the process exits succesfully the application is considered healthy.  There are plans to support URL-based health checks and, potentially, arbitrary custom health-check commands.
 
-Applications that do not listen on a port will need to disable the health check.  This is described [above](#running-applications-without-routes).
+Applications that **do not** listen on a port will need to **disable** the health check.  This is described [above](#running-applications-without-routes).
 
 ### Behavior of Crashing Applications
 
