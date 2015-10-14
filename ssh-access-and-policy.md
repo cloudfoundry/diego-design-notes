@@ -35,7 +35,7 @@ It is also possible to connect to your SSH-enabled app instance via other SSH cl
 ssh -p <ssh-port> cf:<app-guid>/<instance-index>@<ssh-domain>
 ```
 
-The password is any UAA-issued OAuth2 bearer token for a user authorized to modify that app, such as a user with the SpaceDeveloper role in the app's space. Such a token can be obtained from the CF CLI with the `cf oauth-token` command.
+The password is a UAA-issued authorization code for a user authorized to modify that app, such as a user with the SpaceDeveloper role in the app's space. Such a code can be obtained via the Diego-SSH plugin's `get-ssh-code` command, or directly from the UAA `/oauth/authorize` endpoint.
 
 Transferring files with `scp` is invoked similarly, although the user name must be specified with the `-o` flag because of the `:` character present in it. For example, to copy a file out of the instance, run
 
@@ -105,6 +105,6 @@ If SSH access is allowed for the CF deployment, Cloud Controller will advertise 
 
 ### SSH Load Balancer configuration
 
-If the HAproxy job from cf-release is used as the gorouter load balancer and `cc.allow_app_ssh_access` is set to true, HAproxy will also serve as the load balancer for Diego's SSH proxies. This configuration relies on the presence of the same consul server cluster that Diego components use for service discovery. This configuration also works well for deployments where all traffic on the system domain and its subdomains is directed towards the HAproxy job, as is the case for a BOSH-Lite CF deployment on the default `10.244.0.34.xip.io` domain.
+If the HAproxy job from cf-release is used as the gorouter load balancer and `cc.allow_app_ssh_access` is set to true, HAproxy will also serve as the load balancer for Diego's SSH proxies. This configuration relies on the presence of the same consul server cluster that Diego components use for service discovery. This configuration also works well for deployments where all traffic on the system domain and its subdomains is directed towards the HAproxy job, as is the case for a BOSH-Lite CF deployment on the default `bosh-lite.com` domain.
 
 For AWS deployments, where the infrastructure offers load-balancing as a service through ELBs, the deployment operator can provision an ELB to balance load across the Diego SSH proxy instances. This ELB should be configured to listen to TCP traffic on the port given in `app_ssh.port` and to send it to port 2222. In order to register the SSH proxies with this ELB, the ELB identifier should then be added to the `elbs` property in the `cloud_properties` hash of the Diego manifest's `access_zN` resource pools. If the spiff-based manifest-generation templates are used to produce the Diego manifest, these `cloud_properties` hashes should be specified in the `iaas_settings.resource_pool_cloud_properties` section of the `iaas-settings.yml` stub.
