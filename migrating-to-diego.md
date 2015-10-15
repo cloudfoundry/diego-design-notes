@@ -20,6 +20,7 @@ This migration guide is made up of three sections:
     + [Health Checks](#health-checks)
     + [Behavior of Crashing Applications](#behavior-of-crashing-applications)
     + [Environment Variable Interpolation](#environment-variable-interpolation)
+    + [File Permission Modes](#file-permission-modes)
     + [Mixed Instances](#mixed-instances)
 - [**Managing the Migration**](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches.
     + [The Importance of Communication](#the-importance-of-communication)
@@ -294,6 +295,16 @@ Diego's restart policy is currently static.  There are plans to make it configur
 ### Environment Variable Interpolation
 
 Diego does not interpolate environment variables (i.e. referring to one environment variable in another via `$` will not work).  We'd like to see if this is, in fact, an issue for people.  If you have trouble because of this please reach out on cf-dev and we can look into workarounds/fixes.
+
+
+### File Permission Modes
+
+Diego does its best to preserve the permissions modes set on files it copies into its containers. This behavior is in contrast to the DEAs, which blindly change the permission modes of all the application files to `0744` when staging and running an app. The Cloud Controller and CF CLI are now also introducing changes to respect the permission modes of the CF user's files during `cf push`.
+
+In most cases, this change in behavior will not affect how your application runs, as the buildpack itself is responsible for constructing or supplying the executable file with the correct permissions. If you are pushing a pre-built binary or other executable artifact and specifying the start command to run it directly, though, you should now make sure that the execute bit is set on the executable artifact. Likewise, if your application depends on the permissions modes of its other files, those modes should be set correctly on the local files before they are pushed.
+
+Because of the differences in permission-mode behavior between Windows and Linux, when a developer pushes an app from a Windows workstation, the CF CLI will not specify the permission modes, and they will default to `0744`. As the vast majority the feedback we have received about these permission-mode differences has resulted from executable permissions not being set, we expect that this behavior will still resolve most of these issues.
+
 
 ### Mixed Instances
 
