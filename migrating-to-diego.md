@@ -257,13 +257,13 @@ The Diego and Garden teams are still investigating the exact behavior and causes
 
 ### Health Checks
 
-The DEAs perform a single health check when launching an application.  This health is used to verify that the application is "up" before routing to it.  The default health check simply checks that the application has started listening on `$PORT`.  Once the application is up the DEA no longer performs any health checks.  The application is considered crashed *only* when it exits.  As mentioned [above](#running-applications-without-routes) applications with no associated routes aren't health-checked at all.
+The DEAs perform a single health check when launching an application.  This health is used to verify that the application is "up" before routing to it.  The default health check simply checks that the application has started listening on `$PORT`.  Once the application is up the DEA no longer performs any health checks.  The application is considered crashed *only* when it exits.  As mentioned [above](#running-route-less-applications-such-as-workers-and-schedulers) applications with no associated routes aren't health-checked at all.
 
 Diego does health checks differently.  Like the DEAs, Diego performs the health check to identify when the application is "up".  Diego *continues* to perform the health check (every 30 seconds) after the application comes up.  This allows Diego to identify stuck applications -- applications that may still be running but are actually in a degraded state -- and restart them.
 
 Currently Diego supports a port-based health check (like the DEAs).  However, Diego's health check is completely generic: Diego simply runs a process in the container periodically, and if the process exits succesfully the application is considered healthy.  There are plans to support URL-based health checks and, potentially, arbitrary custom health-check commands.
 
-Applications that **do not** listen on a port will need to **disable** the health check.  This is described [above](#running-applications-without-routes).
+Applications that **do not** listen on a port will need to **disable** the health check.  This is described [above](#running-route-less-applications-such-as-workers-and-schedulers).
 
 ### Behavior of Crashing Applications
 
