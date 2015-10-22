@@ -7,7 +7,7 @@ With that said, there are a handful of differences between Diego and the DEAs.  
 This migration guide is made up of three sections:
 
 - [**Targeting Diego**](#targeting-diego) is intended for *developers* and describes the API calls necessary to run on Diego.
-    + [Installing the `diego-beta` CLI Plugin](#installing-the-diego-beta-cli-plugin)
+    + [Installing the `Diego-Enabler` CLI Plugin](#installing-the-diego-enabler-plugin)
     + [Starting a new application on Diego](#starting-a-new-application-on-diego)
     + [Transitioning an application between backends](#transitioning-an-application-between-backends)
     + [Running route-less applications (such as workers and schedulers)](#running-route-less-applications-such-as-workers-and-schedulers)
@@ -36,13 +36,20 @@ App developers can ask CF to run their applications on Diego by setting the `die
 
 It is possible to modify the `diego` boolean on a running application.  This will cause it to transition from one backend to the other dynamically (though we make no guarantees around uptime).  The preferred approach is to perform a blue-green style deployment onto Diego.
 
-The following instructions assume you have the `diego-beta` CLI plugin.  Instructions for installing it follow.
+The following instructions assume you have the `Diego-Enabler` CLI plugin.  Instructions for installing it follow.
 
-### Installing the `diego-beta` CLI Plugin
+### Installing the `Diego-Enabler` CLI Plugin
 
 We have published a `cf` CLI plugin that makes opting into Diego easier.
 
-For CF CLI v6.10.0+ you can install it from the CF-Community repo:
+For CF CLI v6.13.0+, you can install it from the CF-Community repo:
+
+```
+cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
+cf install-plugin Diego-Enabler -r CF-Community
+```
+
+For CF CLI v6.10.0+ and before v6.13.0, install the `Diego-Beta` plugin instead:
 
 ```
 cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
@@ -66,7 +73,7 @@ cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw
 cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/win64/diego-beta.win64
 ```
 
-The `diego-beta` plugin includes subcommands to `enable-diego` and `disable-diego`.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modifying the application's health check with `set-health-check` and `get-health-check`.
+The `Diego-Enabler` (and  `diego-beta`) plugin includes subcommands to `enable-diego` and `disable-diego`.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modifying the application's health check with `set-health-check` and `get-health-check`.
 
 ### Starting a new application on Diego
 
