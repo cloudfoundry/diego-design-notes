@@ -32,9 +32,9 @@ This migration guide is made up of three sections:
 
 ## Targeting Diego
 
-App developers can ask CF to run their applications on Diego by setting the `diego` boolean on their application to `true`.  Applications with `diego=true` will both stage and run on Diego.
+App developers can ask CF to run their applications on Diego by setting the `diego` boolean field on their application to `true`.  Applications with their `diego` field set to `true` will both stage and run on Diego.
 
-It is possible to modify the `diego` boolean on a running application.  This will cause it to transition from one backend to the other dynamically (though we make no guarantees around uptime).  The preferred approach is to perform a blue-green style deployment onto Diego.
+It is possible to modify the `diego` field on a running application.  This will cause it to transition from one backend to the other immediately, although without guaranteed uptime. To ensure uptime, we recommend performing a [blue-green deployment](http://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html) in which the new, 'green' app is placed onto Diego intentionally.
 
 The following instructions assume you have the [`Diego-Enabler` CLI plugin](https://github.com/cloudfoundry-incubator/Diego-Enabler).  Instructions for installing it follow.
 
