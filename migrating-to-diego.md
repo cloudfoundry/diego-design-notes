@@ -36,44 +36,21 @@ App developers can ask CF to run their applications on Diego by setting the `die
 
 It is possible to modify the `diego` boolean on a running application.  This will cause it to transition from one backend to the other dynamically (though we make no guarantees around uptime).  The preferred approach is to perform a blue-green style deployment onto Diego.
 
-The following instructions assume you have the `Diego-Enabler` CLI plugin.  Instructions for installing it follow.
+The following instructions assume you have the [`Diego-Enabler` CLI plugin](https://github.com/cloudfoundry-incubator/Diego-Enabler).  Instructions for installing it follow.
 
 ### Installing the `Diego-Enabler` CLI Plugin
 
-We have published a `cf` CLI plugin that makes opting into Diego easier.
-
-For CF CLI v6.13.0+, you can install it from the CF-Community repo:
+The [`Diego-Enabler` CLI plugin](https://github.com/cloudfoundry-incubator/Diego-Enabler) makes opting into Diego easier. It is intended for use with CF CLI v6.13.0+. Install it from the CF-Community repo as follows:
 
 ```
 cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
 cf install-plugin Diego-Enabler -r CF-Community
 ```
 
-For CF CLI v6.10.0+ and before v6.13.0, install the `Diego-Beta` plugin instead:
+For CF CLI versions older than v6.13.0, install the [`Diego-Beta` plugin](https://github.com/cloudfoundry-incubator/diego-cli-plugin) instead.
 
-```
-cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
-cf install-plugin Diego-Beta -r CF-Community
-```
 
-For older versions of the CF CLI:
-
-*To install the OS X binary:*
-```
-cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/osx/diego-beta.osx
-```
-
-*To install the linux binary:*
-```
-cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/linux64/diego-beta.linux64
-```
-
-*To install the windows binary:*
-```
-cf install-plugin https://github.com/cloudfoundry-incubator/diego-cli-plugin/raw/master/bin/win64/diego-beta.win64
-```
-
-The `Diego-Enabler` (and  `diego-beta`) plugin includes subcommands to `enable-diego` and `disable-diego`.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modifying the application's health check with `set-health-check` and `get-health-check`.
+The `Diego-Enabler` (and `Diego-Beta`) plugin includes subcommands to `enable-diego` and `disable-diego` for an app.  You can also check on whether an application has opted into Diego via `has-diego-enabled`.  There is also support around modifying the application's health check with `set-health-check` and `get-health-check`.
 
 ### Starting a new application on Diego
 
