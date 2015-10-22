@@ -7,7 +7,7 @@ With that said, there are a handful of differences between Diego and the DEAs.  
 This migration guide is made up of three sections:
 
 - [**Targeting Diego**](#targeting-diego) is intended for *developers* and describes the API calls necessary to run on Diego.
-    + [Installing the `Diego-Enabler` CLI Plugin](#installing-the-diego-enabler-plugin)
+    + [Installing the `Diego-Enabler` CLI Plugin](#installing-the-diego-enabler-cli-plugin)
     + [Starting a new application on Diego](#starting-a-new-application-on-diego)
     + [Transitioning an application between backends](#transitioning-an-application-between-backends)
     + [Running route-less applications (such as workers and schedulers)](#running-route-less-applications-such-as-workers-and-schedulers)
