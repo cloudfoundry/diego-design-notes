@@ -106,19 +106,21 @@ cf has-diego-enabled APPLICATION_NAME
 For the DEA backend, `cf push APP_NAME --no-route` does two things:
 
 - it skips creating and binding a route for the application
-- it (indirectly) causes the DEAs to skip the port health-check on application startup
+- it implicitly causes the DEAs to skip the port health-check on application startup
 
 > By default, when starting an application the DEAs wait until the application is listening on its assigned port *before* marking it as ready to receive traffic.  To determine whether or not to perform this check, the DEA inspects the routes bound to the application and determines: if they're present the port check is performed.  If they're empty, no port check is performed.
 
 Diego configures its health checks [differently from the DEAs](#health-checks).  With Diego, `cf push APP_NAME --no-route` only skips creating and binding a route for the application.  It does not tell Diego which type of health check to perform.
 
-By default, Diego does the same port-based health check that the DEA performs.  If your application does *not* listen on a port (for example, if you are pushing a resque worker), then Diego will never see the application come up and will eventually mark it as crashed.  In these cases you must tell Diego to perform no health check:
+By default, Diego does the same port-based health check that the DEA performs.  If your application does *not* listen on a port (for example, if you are pushing a worker or a scheduler app), then it will never satisfy this port check, and Diego will eventually mark it as crashed.  In these cases you must tell Diego not to perform a port-based health check via:
 
 ```
 cf set-health-check APPLICATION_NAME none
 ```
 
-Note: the two valid values for the health check are currently `port` and `none`, with `port` the default.  You can get the current health check for your application via
+The `none` name here is unfortunately misleading: if your app instance exits unexpectedly, Diego will still detect this and restart it automatically. We plan to add `process` as a better name for this type of health-check soon.
+
+For the time being, the two valid values for the health check are currently `port` and `none`, with `port` the default. You can retrieve the current health check for your application via
 
 ```
 cf get-health-check APPLICATION_NAME
