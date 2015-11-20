@@ -176,7 +176,7 @@ Current implementations:
 
 - [**Buildpack-App-Lifecycle**](https://github.com/cloudfoundry-incubator/buildpack-app-lifecycle) implements a traditional buildpack-based lifecycle.
 - [**Docker-App-Lifecycle**](https://github.com/cloudfoundry-incubator/docker-app-lifecycle) implements a docker-based lifecycle.
-- [**Windows-App-Lifecycle**](https://github.com/cloudfoundry-incubator/windows-app-lifecycle) implements a lifecycle for .NET applications on Windows.
+- [**Windows-App-Lifecycle**](https://github.com/cloudfoundry-incubator/windows_app_lifecycle) implements a lifecycle for .NET applications on Windows.
 
 ### Bringing it all together
 
