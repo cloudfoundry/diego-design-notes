@@ -2,13 +2,37 @@
 
 This document discusses Diego's support for running Docker images and outlines how CF uses Diego to run Docker images.
 
+- [Pushing a Docker image with the CF CLI](#pushing-a-docker-image-with-the-cf-cli)
+	- [CLI 6.13.0 and later](#cli-6.13.0-and-later)
+	- [CLI 6.12.4 and earlier](#cli-6.12.4-and-earlier)
 - [How Diego launches Docker images](#how-diego-launches-docker-images)
 - [How CC tells Diego to launch Docker images](#how-cc-tells-diego-to-launch-docker-images)
 - [Docker in a multi-tenant world](#docker-in-a-multi-tenant-world)
 - [Docker Deltas](#docker-deltas)
-- [Pushing a Docker image with the Diego CLI plugin](#pushing-a-docker-image-with-the-diego-cli-plugin)
 
-> Some of this is adapted from the [Lattice documentation](http://lattice.cf/docs/troubleshooting/#how-does-lattice-work-with-docker-images).
+## Pushing a Docker image with the CF CLI
+
+### CLI 6.13.0 and later
+
+Versions 6.13.0 and later of the CF CLI include native support for pushing a Docker image as a CF app, with the `cf push` command's `-o` or `--docker-image` flags. For example, running
+
+```bash
+cf push my-app -o cloudfoundry/lattice-app
+```
+
+will push the image located at `cloudfoundry/lattice-app`.
+
+
+### CLI 6.12.4 and earlier
+
+Versions 6.12.4 and earlier of the CF CLI do not natively support pushing Docker images, but the [Diego CLI Plugin](https://github.com/cloudfoundry-incubator/diego-cli-plugin) provides this functionality with its `docker-push` command. For example, running
+
+```bash
+cf docker-push my-app cloudfoundry/lattice-app
+```
+
+will push the image located at `cloudfoundry/lattice-app`.
+
 
 
 ## How Diego runs Docker images
@@ -49,14 +73,4 @@ At this point, Garden-Linux runs Docker images with robust support for users emb
 
 Note that Diego runs and manages Docker applications just as it runs and manages build-pack based applications. In particular, it assumes that the application is a [12-factor app](http://12factor.net), and is therefore subject to the same lifecycle policies as buildpack-based 12-factor apps (such as restart with crash back-off, and evacuation during rolling updates of the Diego Cells). Diego does not yet support ways of mounting other volumes to Garden containers or linking separate containers, although these are both areas of active interest and research that we intend to address soon.
 
-
-## Pushing a Docker image with the Diego CLI plugin
-
-The [Diego CLI Plugin](https://github.com/cloudfoundry-incubator/diego-cli-plugin) includes support for pushing a Docker image via CC.  For example:
-
-```
-cf docker-push my-app cloudfoundry/lattice-app
-```
-
-will push the image located at `cloudfoundry/lattice-app`. This functionality is soon moving into the [core CF CLI](https://github.com/cloudfoundry/cli).
 
