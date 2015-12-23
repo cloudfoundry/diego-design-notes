@@ -3,8 +3,8 @@
 This document discusses Diego's support for running Docker images and outlines how CF uses Diego to run Docker images.
 
 - [Pushing a Docker image with the CF CLI](#pushing-a-docker-image-with-the-cf-cli)
-	- [CLI 6.13.0 and later](#cli-6.13.0-and-later)
-	- [CLI 6.12.4 and earlier](#cli-6.12.4-and-earlier)
+	- [CLI 6.13.0 and later](#cli-6130-and-later)
+	- [CLI 6.12.4 and earlier](#cli-6124-and-earlier)
 - [How Diego launches Docker images](#how-diego-launches-docker-images)
 - [How CC tells Diego to launch Docker images](#how-cc-tells-diego-to-launch-docker-images)
 - [Docker in a multi-tenant world](#docker-in-a-multi-tenant-world)
