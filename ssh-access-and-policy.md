@@ -5,9 +5,27 @@ This document describes how CF and Diego support SSH access to CF application in
 
 ## Developers: SSH Access to CF App Instances
 
-### Diego-SSH CLI Plugin
+### CF CLI
 
-The easiest way to start an SSH session into a CF app instance is to use the [SSH plugin for the CF CLI](https://github.com/cloudfoundry-incubator/diego-ssh/releases). For CF CLI v6.10.0+, you can install it from the CF-Community repo:
+The easiest way to start an SSH session into a CF app instance is to use commands in a recent version of the CF CLI. For older versions of the CLI, there is also an [SSH CLI plugin](https://github.com/cloudfoundry-incubator/diego-ssh/releases) providing these commands.
+
+
+#### CLI 6.13.0 and later: Native Support
+
+Versions 6.13.0 and later of the CF CLI natively support a `cf ssh` command for SSH access to CF app instances.  If your app is running on Diego with SSH enabled and your operator has configured SSH access to be publicly routable, run
+
+```
+cf ssh <app-name>
+```
+
+to start an interactive SSH session in the index-0 instance of your app. To target a different instance with `cf ssh`, supply its index via the `-i` flag. 
+
+The `cf ssh` command also supports executing commands inside the app instance and forwarding local ports to it via the `-L` flag. Run `cf help ssh` for a description of all the options available on the command.
+
+
+### CLI 6.12.4 and earlier: Diego-SSH CLI Plugin
+
+Versions 6.12.4 and earlier of the CF CLI can obtain the `ssh` command from the [SSH CLI plugin](https://github.com/cloudfoundry-incubator/diego-ssh/releases). For CF CLI v6.10.0+, you can install it from the CF-Community repo:
 
 ```
 cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
@@ -16,15 +34,6 @@ cf install-plugin Diego-SSH -r CF-Community
 
 For older versions of the CF CLI, install the plugin via `cf install-plugin <binary-url>`, where `<binary-url>` is the URL from the [SSH plugin GitHub releases](https://github.com/cloudfoundry-incubator/diego-ssh/releases) appropriate for your OS and architecture.
 
-If your app is running on Diego with SSH enabled and your operator has configured SSH access to be publicly routable, run
-
-```
-cf ssh <app-name>
-```
-
-to start an interactive SSH session in instance index 0 of your app. To target a different instance index with `cf ssh`, supply it via the `-i` flag. 
-
-The `cf ssh` command also supports executing commands inside the app instance and forwarding local ports to it via the `-L` flag. Additionally, we plan to add support for a `cf scp` command to transfer files via the SCP protocol and for a command or flag to run the Diego-SSH plugin as a local SSH proxy to the instance.
 
 
 ### CF Authenticator access
@@ -35,7 +44,7 @@ It is also possible to connect to your SSH-enabled app instance via other SSH cl
 ssh -p <ssh-port> cf:<app-guid>/<instance-index>@<ssh-domain>
 ```
 
-The password is a UAA-issued authorization code for a user authorized to modify that app, such as a user with the SpaceDeveloper role in the app's space. Such a code can be obtained via the Diego-SSH plugin's `get-ssh-code` command, or directly from the UAA `/oauth/authorize` endpoint.
+The password is a UAA-issued authorization code for a user authorized to modify that app, such as a user with the SpaceDeveloper role in the app's space. Such a code can be obtained via the CF CLI's `ssh-code` command, or directly from the UAA `/oauth/authorize` endpoint.
 
 Transferring files with `scp` is invoked similarly, although the user name must be specified with the `-o` flag because of the `:` character present in it. For example, to copy a file out of the instance, run
 
@@ -68,15 +77,6 @@ The Diego-SSH plugin allows users to inspect and alter the app and space fields 
 
 The `allow_app_ssh_access` property must be changed through Cloud Controller's config file. For a BOSH-deployed CF, an operator can specify this config property via the `cc.allow_app_ssh_access` property described below.
 
-
-### Restart Policy for Altered Instances
-
-We understand that developers and operators alike may be concerned that unrestricted access to CF app instances can produce instances whose contents and processes differ from those that the platform has provisioned. Consequently, we propose a fairly stringent restart policy on CF app instances that have been accessed via SSH in ways that could reasonably alter the contents of the instance:
-
-- Instances accessed via SSH port forwarding or source-mode SCP ('copying files out') will not be considered altered afterward and will not be restarted.
-- Instances accessed by other SSH operations, such as an interactive session or sink-mode SCP ('copying files in') will be considered altered and will be restarted after the connection closes.
-
-We intend to allow CC admins to configure this policy on a per-space basis, so that spaces intended solely for app development and experimentation can be exempt from this instance-restarting policy. These restrictions are not yet in place, but we expect to implement them before we consider the initial work on SSH access complete.
 
 
 ## Operators: Configuring Deployments for SSH Access to CF App Instances
