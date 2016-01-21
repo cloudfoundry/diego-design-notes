@@ -160,7 +160,7 @@ The simplest way to speed up staging performance is to specify a particular buil
 ```
 cf push my-app -b ruby_buildpack --no-start
 cf enable-diego my-app
-cf start
+cf start my-app
 ```
 
 will stage the requested application using only the Ruby buildpack.
