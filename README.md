@@ -117,9 +117,9 @@ Only the Rep communicates with the BBS.
 - [**Auctioneer**](https://github.com/cloudfoundry-incubator/auctioneer)
     - holds auctions for Tasks and ActualLRP instances.
     - auctions are run using the [auction](https://github.com/cloudfoundry-incubator/auction) package.  Auction communication goes over HTTP and is between the Auctioneer and the Cell Reps.
-    - maintains a lock in the BBS such that ***only one*** auctioneer may handles auctions at a time.
+    - maintains a lock using consul such that ***only one*** auctioneer may handles auctions at a time.
 - [**Converger**](https://github.com/cloudfoundry-incubator/converger)
-    - maintains a lock in the BBS to ensure that ***only one*** converger performs convergence.  This is primarily for performance considerations.  Convergence should be idempotent.
+    - maintains a lock using consul to ensure that ***only one*** converger performs convergence.  This is primarily for performance considerations.  Convergence should be idempotent.
     - uses the converge methods in the runtime-schema/bbs to ensure eventual consistency and fault tolerance for Tasks and LRPs
     - when converging LRPs, the converger identifies which actions need to take place to bring DesiredLRP state and ActualLRP state into accord.  Two actions are possible:
         - if an instance is missing, a start auction is sent.
@@ -139,8 +139,9 @@ Only the Rep communicates with the BBS.
 ### Additional (shim-like) components
 
 - [**Route-Emitter**](https://github.com/cloudfoundry-incubator/route-emitter)
-    - monitors DesiredLRP state and ActualLRP state via the BBS.  When a change is detected, the Route-Emitter emits route registration/unregistration messages to the [router](https://github.com/cloudfoundry/gorouter)
+    - monitors DesiredLRP state and ActualLRP state via the BBS.  When a change is detected, the Route-Emitter emits route registration/unregistration messages to the [router](https://github.com/cloudfoundry/gorouter) via [NATS](https://github.com/nats-io/gnatsd)
     - periodically emits the entire routing table to the router.
+    - maintains a lock using consul such that ***only one*** route-emitter may handles route registration at a time.
 
 
 ### Platform-Specific Components
