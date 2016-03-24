@@ -22,6 +22,7 @@ This migration guide is made up of three sections:
     + [Environment Variable Interpolation](#environment-variable-interpolation)
     + [File Permission Modes](#file-permission-modes)
     + [Mixed Instances](#mixed-instances)
+    + [Application Log Lines](#application-log-lines)
 - [**Managing the Migration**](#managing-the-migration) is intended for *operators* and describes the tooling available to manage a migration to Diego and proposes some approaches.
     + [The Importance of Communication](#the-importance-of-communication)
     + [Auditing Applications](#auditing-applications)
@@ -318,6 +319,44 @@ Always use a green-blue deploy strategy when modifying anything about a running 
 
 None
 
+
+### Application log lines
+
+For instance index N of an app running on the DEAs, the `cf logs` command
+annotates its stdout and stderr log lines with `[App/N]`. On Diego, the
+annotation is `[APP/N]`, with capitalized 'P' characters.
+
+A representative output of `cf logs` for the 'Dora' test app running on Diego is shown below:
+
+```
+$ cf logs dora
+2016-03-24T01:32:15.06-0700 [APP/0]      ERR [2016-03-24 08:32:15] INFO  WEBrick 1.3.1
+2016-03-24T01:32:15.06-0700 [APP/0]      ERR [2016-03-24 08:32:15] INFO  ruby 2.2.4 (2015-12-16) [x86_64-linux]
+2016-03-24T01:32:15.06-0700 [APP/0]      ERR [2016-03-24 08:32:15] INFO  WEBrick::HTTPServer#start: pid=21 port=8080
+2016-03-24T01:33:50.41-0700 [APP/0]      OUT Dora started
+```
+
+
+##### Why?
+
+All the other annotations for application-specific log output are in all caps,
+such as `API` for Cloud Controller logs, `STG` for an app's staging task,
+`RTR` for routing log lines, and `LGR` for loggregator output. While some of
+these are acronyms, some are not. The DEA-emitted `App` was inconsistent with
+this convention, so on Diego it was changed to the more consistent `APP`.
+
+
+##### Workarounds
+
+This annotation cannot be changed by app developers or platform operators. If
+you are relying on the presence of that annotation to identify application log
+lines, consider relaxing the matching criterion to capture logs emitted from
+instances running on either the DEAs or Diego.
+
+
+##### Future plans
+
+None.
 
 ## Managing the Migration
 
