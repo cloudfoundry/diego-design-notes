@@ -113,7 +113,7 @@ These Diego components run and monitor Tasks and LRPs in Garden containers:
     - periodically collects container metrics and emits them to Loggregator.
 - [**Garden**](https://github.com/cloudfoundry-incubator/garden)
     - provides a platform-independent server and client to manage garden containers,
-    - defines an interface to be implemented by container-runners, such as [garden-linux](https://github.com/cloudfoundry-incubator/garden-linux), [garden-linux](https://github.com/cloudfoundry/garden-windows), and [guardian](https://github.com/cloudfoundry-incubator/guardian).
+    - defines an interface to be implemented by container-runners, such as [garden-linux](https://github.com/cloudfoundry-incubator/garden-linux), [garden-windows](https://github.com/cloudfoundry/garden-windows), and [guardian](https://github.com/cloudfoundry-incubator/guardian).
 - [**Metron**](https://github.com/cloudfoundry/loggregator/tree/develop/src/metron)
     - forwards application logs and application and component metrics to [doppler](https://github.com/cloudfoundry/loggregator)
 
