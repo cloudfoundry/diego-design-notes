@@ -13,7 +13,7 @@ This migration guide is made up of three sections:
     + [Running route-less applications (such as workers and schedulers)](#running-route-less-applications-such-as-workers-and-schedulers)
     + [Recognizing capacity issues](#recognizing-capacity-issues)
 - [**Diego Deltas**](#diego-deltas) describes known differences between Diego and the DEAs.
-    + [Staging Performance](#staging-performance)
+    + [On-Demand Buildpack Downloads](#on-demand-buildpack-downloads)
     + [Files API](#files-api)
     + [CF-Specific Environment Variables](#cf-specific-environment-variables)
     + [Disk Quota Over-Enforcement during Container Setup](#disk-quota-over-enforcement-during-container-setup)
@@ -144,31 +144,31 @@ The CLI has already been updated to:
 
 Here's a list of some of the (known!) differences between Diego and the DEAs.
 
-### Staging Performance
+### On-Demand Buildpack Downloads
 
-Diego's staging performance is somewhat slower than the DEAs.
+The first time a staging task lands on a cell, it may take longer than usual as it downloads the buildpacks into the cell's download cache.
 
 ##### Why?
 
-The DEAs are tightly coupled to the notion that staging entails running through a set of buildpacks.  Because of this there are optimizations in place that treat buildpacks as *special things*: in short, the DEAs basically mount the buildpacks directly into containers.
+As part of the tight coupling of the DEAs to the buildpack-based app model, Cloud Controller and the DEAs communicate with each other to warm the DEAs with the entire set of admin buildpacks registered with Cloud Controller.
 
-Diego, being a generic container runtime, does not treat buildpacks in a special way.  They are simply assets that are downloaded and copied into containers.  The only optimization in place is a local download cache that allows Diego to avoid the download step.  At this time, however, the buildpacks need to be *copied* into each container - this copy step is expensive and does not parallelize well (it's disk-performance-bound).  This is exacerbated by the size of CF's offline buildpacks.
+As Diego is intended to be a more generic container runtime, it does not have a specific first-class notion of buildpacks, and instead treats them more generically as a cacheable asset. Diego also does not expose a mechanism to pre-warm cached assets on individual cells. This means that each cell will download buildpacks into its cache only when a staging task running on that cell requests them.
 
 ##### Workarounds
 
-The simplest way to speed up staging performance is to specify a particular buildpack via the `-b` flag on `cf push`.  This will cause Diego to only fetch and copy in the single specified buildpack.  For example,
+In practice, after a short amount of time in an environment with any substantial client load, all the Diego cells will have cached these buildpack downloads as part of processing buildpack staging tasks, and this problem will not be observed.
 
-```
-cf push my-app -b ruby_buildpack --no-start
-cf enable-diego my-app
-cf start my-app
-```
+Developers that are particularly concerned with occasionally encountering this issue after updates to their target CF deployment can specify a particular buildpack via the `-b` option on `cf push`, although then they will lose the benefits of the auto-detect flow through all of the admin buildpacks.
 
-will stage the requested application using only the Ruby buildpack.
 
 ##### Future plans
 
-There are plans to eventually improve Diego's semantics around mounting shared volumes across containers.  When this lands we will be able to directly mount the buildpacks into the containers (much like the DEAs do) without breaking Diego's generic abstractions.  A placeholder story is [here](https://www.pivotaltracker.com/story/show/88734100).
+While staging performance has already been improved vastly by allowing Diego to bind-mount buildpacks into containers, as the DEAs already do, it could be beneficial to optimize this first-staging-task experience, especially in environments that have many more admin buildpacks installed than the default CF buildpacks. There may be some refinements to make on the Diego cells, such as having the cell reps resume their download caches on restart and optimizing the number of concurrent downloads to maximize throughput on the client side.
+
+Improving throughput for concurrent requests at the Cloud Controller Blobstore may also mitigate this issue. For environments using WebDAV as a replacement for NFS, the CAPI team has indicated that there is likely additional tuning of the WebDAV server that could improve throughput substantially. The incubating Bits Service project may also provide the correct separation of concerns within CF to help mitigate this performance issue with later tuning or caching optimizations.
+
+We are wary of introducing a mechanism to warm the Diego cells in a CF deployment with buildpacks as they start up, as the DEAs do today. It it much more common for cells to start in a CF deployment as part of a rolling update through the cluster, in which case the network bandwidth and disk I/O operations on the cell are more important to use to start replacement instances for evacuating app instances on other cells. Forcing each cell to download buildpacks at startup time instead will likely interfere with that instance evacuation process.
+
 
 ### Files API
 
