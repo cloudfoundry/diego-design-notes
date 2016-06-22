@@ -25,9 +25,11 @@ Diego sends real-time streaming logs for Tasks/LRPs to the [Loggregator](https:/
 Diego is the next-generation runtime powering Cloud Foundry (CF), but Diego is abstracted away from CF: CF simply acts as another Diego client via the BBS API.  For now, there is a translation layer called the CC-Bridge that converts the [Cloud Controller](https://github.com/cloudfoundry/cloud_controller_ng)'s domain-specific requests to stage and run applications into requests for Tasks and LRPs.  Eventually Cloud Controller will be modified to communicate directly with the BBS.  The process of staging and running a CF application is complex and filled with platform and implementation-specific details.  A collection of binaries known collectively as the [App Lifecycle](#app-lifecycles) encapsulate these concerns. The Tasks and LRPs produced by the CC-Bridge download the App Lifecycle binaries and execute them to stage, to run, and to health-check CF applications.
 
 
-## CF Summit Talks
+## CF Summit Talks on Diego
 
-- 2014 CF Summit talk on Diego: [YouTube video](https://www.youtube.com/watch?v=1OkmVTFhfLY) &middot; [Apple Keynote slides](https://drive.google.com/file/d/0B55cOnKV7PrQaTBKRjg4MjE1Ujg/view?usp=sharing) &middot; [SlideShare slides](http://www.slideshare.net/Pivotal/cloud-foundry-summit-2014-diego-reenvisioning-the-elastic-runtime)
+- 2016: [YouTube video](https://www.youtube.com/watch?v=iv5EpheLLh0) &middot; [Apple Keynote slides](https://drive.google.com/file/d/0Bw2c1Jc_v7t1T0dZZ2l3ZWJ5SHM/view?usp=sharing) &middot; [PDF slides](https://drive.google.com/file/d/0Bw2c1Jc_v7t1WlM4U09WVUE4bWc/view)
+- 2015: [YouTube video](https://www.youtube.com/watch?v=SSxI9eonBVs)
+- 2014: [YouTube video](https://www.youtube.com/watch?v=1OkmVTFhfLY) &middot; [Apple Keynote slides](https://drive.google.com/file/d/0B55cOnKV7PrQaTBKRjg4MjE1Ujg/view?usp=sharing) &middot; [SlideShare slides](http://www.slideshare.net/Pivotal/cloud-foundry-summit-2014-diego-reenvisioning-the-elastic-runtime)
 
 
 ## What are all these repos and what do they do?
