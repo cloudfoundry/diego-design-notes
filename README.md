@@ -1,6 +1,6 @@
 # Diego Design Notes
 
-These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is generally up-to-date, although not guaranteed to be.  If you find something that you suspect is not up-to-date, please [open an issue](https://github.com/cloudfoundry-incubator/diego-design-notes/issues) on this repository.
+These are design notes intended to convey how the various components of Diego communicate and interrelate.  It is not comprehensive and is generally up-to-date, although not guaranteed to be.  If you find something that you suspect is not up-to-date, please [open an issue](https://github.com/cloudfoundry/diego-design-notes/issues) on this repository.
 
 
 ## Migrating to Diego
@@ -34,11 +34,11 @@ Diego is the next-generation runtime powering Cloud Foundry (CF), but Diego is a
 
 ## What are all these repos and what do they do?
 
-Below is a diagrammatic overview of the major repositories and components in Diego and CF (also [PDF](https://github.com/cloudfoundry-incubator/diego-design-notes/raw/master/diego-overview.pdf) &middot; [clickable map](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)).
+Below is a diagrammatic overview of the major repositories and components in Diego and CF (also [PDF](https://github.com/cloudfoundry/diego-design-notes/raw/master/diego-overview.pdf) &middot; [clickable map](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)).
 
-[![Diego Overview](./diego-overview.png)](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry-incubator/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
+[![Diego Overview](./diego-overview.png)](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
-Components in the blue region are part of the Diego core and handle the running and monitoring of Tasks and LRPs.  These components all come from the [Diego BOSH release](https://github.com/cloudfoundry-incubator/diego-release).
+Components in the blue region are part of the Diego core and handle the running and monitoring of Tasks and LRPs.  These components all come from the [Diego BOSH release](https://github.com/cloudfoundry/diego-release).
 
 Components in the yellow region provide infrastructure support to Diego and CF components. At the moment, this primarily includes [Consul](https://github.com/hashicorp/consul) for DNS-based dynamic service discovery and a consistent key-value store for distributed locks and component discovery.
 
@@ -223,7 +223,7 @@ CF and Diego consist of many disparate components.  Ensuring that these componen
 
 ### The BOSH Release
 
-[**Diego-Release**](https://github.com/cloudfoundry-incubator/diego-release) packages Diego as a BOSH release. Its [README](https://github.com/cloudfoundry-incubator/diego-release) includes detailed instructions for deploying CF and Diego to a local [BOSH-Lite](https://github.com/cloudfoundry/bosh-lite).
+[**Diego-Release**](https://github.com/cloudfoundry/diego-release) packages Diego as a BOSH release. Its [README](https://github.com/cloudfoundry/diego-release) includes detailed instructions for deploying CF and Diego to a local [BOSH-Lite](https://github.com/cloudfoundry/bosh-lite).
 
 Diego-Release is also the **canonical** `GOPATH` for the Diego. All Diego development takes place inside the Diego-Release directory.
 
