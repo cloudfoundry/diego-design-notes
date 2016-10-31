@@ -214,15 +214,19 @@ Additionally, while Diego does now provide `application_uris` and its undocument
 
 The DEAs currently set this environment variable to `0.0.0.0` in all cases.
 
+##### Workarounds
+
+- None: unfortunately, Cloud Controller disallows users from setting the `VCAP_APP_HOST` environment variable on an app, or indeed any environment variable prefixed with `VCAP_`. It is recommended that you migrate away from the `VCAP_APP_HOST` environment variable, especially as it no longer provides useful information for the app instance.
+
 
 #### `VCAP_APP_PORT`
 
-This environment variable is deprecated. Apps should now use `PORT` or `CF_INSTANCE_PORT` instead.
+This environment variable is deprecated. Apps should now determine the port on which to listen from the `PORT` environment variable instead. Note that [`CF_INSTANCE_PORT` generally has a different value](http://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html#CF-INSTANCE-PORT) and so should not be used as a replacement.
 
 
 ##### Workarounds
 
-- Unfortunately, Cloud Controller disallows users from setting the `VCAP_APP_HOST` environment variable on an app, or indeed any environment variable prefixed with `VCAP_`. It is recommended that you migrate away from the `VCAP_APP_HOST` environment variable, especially as it no longer provides useful information for the app instance.
+- None: unfortunately, Cloud Controller disallows users from setting the `VCAP_APP_PORT` environment variable on an app, or indeed any environment variable prefixed with `VCAP_`.
 
 
 ### Disk Quota Over-Enforcement during Container Setup
