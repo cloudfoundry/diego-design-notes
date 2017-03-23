@@ -67,10 +67,12 @@ There is more work to be done to mitigate our security concerns around running D
 Because of these concerns, CC currently default not to allow Docker-based apps to run on the platform. To enable them to run, a CC admin can turn on the `diego_docker` feature flag by running `cf enable-feature-flag diego_docker`. Disabling it later will cause CC to tell Diego to stop all Docker-based apps within a few convergence cycles (on the order of a minute).
 
 
+## Docker Volume support
+
+Diego now supports Docker volumes. More information can be found within [CF-Docs](https://docs.cloudfoundry.org/devguide/services/using-vol-services.html) on how to enable volume support, and the limitations of NFS volumes within the [NFS Bosh Volume Release](https://github.com/cloudfoundry-incubator/nfs-volume-release#special-notes-for-docker-image-based-apps).
+
 ## Docker Deltas
 
 At this point, Garden-Linux runs Docker images with robust support for users embedded in the filesystem, and can run even the barest of images as containers.
 
-Note that Diego runs and manages Docker applications just as it runs and manages build-pack based applications. In particular, it assumes that the application is a [12-factor app](http://12factor.net), and is therefore subject to the same lifecycle policies as buildpack-based 12-factor apps (such as restart with crash back-off, and evacuation during rolling updates of the Diego Cells). Diego does not yet support ways of mounting other volumes to Garden containers or linking separate containers, although these are both areas of active interest and research that we intend to address soon.
-
-
+Note that Diego runs and manages Docker applications just as it runs and manages build-pack based applications. In particular, it assumes that the application is a [12-factor app](http://12factor.net), and is therefore subject to the same lifecycle policies as buildpack-based 12-factor apps (such as restart with crash back-off, and evacuation during rolling updates of the Diego Cells). Diego does not yet support ways of linking separate containers, although this is an area of active interest and research that we intend to address soon.
