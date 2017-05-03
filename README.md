@@ -197,7 +197,7 @@ Each App Lifecycle provides a set of binaries that manage a *Cloud Foundry*-spec
 Current implementations:
 
 - [**Buildpack-App-Lifecycle**](https://github.com/cloudfoundry/buildpackapplifecycle) implements a buildpack-based lifecycle.
-- [**Docker-App-Lifecycle**](https://github.com/cloudfoundry/docker-app-lifecycle) implements a lifecycle to stage and run Docker images as CF apps.
+- [**Docker-App-Lifecycle**](https://github.com/cloudfoundry/dockerapplifecycle) implements a lifecycle to stage and run Docker images as CF apps.
 - [**Windows-App-Lifecycle**](https://github.com/cloudfoundry/windows_app_lifecycle) implements a lifecycle for .NET applications on Windows.
 
 
