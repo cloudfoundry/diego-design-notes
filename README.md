@@ -27,6 +27,7 @@ Diego is the next-generation runtime powering Cloud Foundry (CF), but Diego is a
 
 ## CF Summit Talks on Diego
 
+- 2017: [YouTube video](https://www.youtube.com/watch?v=gB-nrdYTTKU) &middot; [Apple Keynote slides](https://drive.google.com/file/d/0Bw2c1Jc_v7t1TWoyWFktRzdwRzQ/view) &middot; [PDF slides](https://drive.google.com/file/d/0Bw2c1Jc_v7t1dm9ydVlwS2xfRGc/view)
 - 2016: [YouTube video](https://www.youtube.com/watch?v=iv5EpheLLh0) &middot; [Apple Keynote slides](https://drive.google.com/file/d/0Bw2c1Jc_v7t1T0dZZ2l3ZWJ5SHM/view?usp=sharing) &middot; [PDF slides](https://drive.google.com/file/d/0Bw2c1Jc_v7t1WlM4U09WVUE4bWc/view)
 - 2015: [YouTube video](https://www.youtube.com/watch?v=SSxI9eonBVs)
 - 2014: [YouTube video](https://www.youtube.com/watch?v=1OkmVTFhfLY) &middot; [Apple Keynote slides](https://drive.google.com/file/d/0B55cOnKV7PrQaTBKRjg4MjE1Ujg/view?usp=sharing) &middot; [SlideShare slides](http://www.slideshare.net/Pivotal/cloud-foundry-summit-2014-diego-reenvisioning-the-elastic-runtime)
