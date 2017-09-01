@@ -35,9 +35,9 @@ Diego is the next-generation runtime powering Cloud Foundry (CF), but Diego is a
 
 ## What are all these repos and what do they do?
 
-Below is a diagrammatic overview of the major repositories and components in Diego and CF (also [PDF](https://github.com/cloudfoundry/diego-design-notes/raw/master/diego-overview.pdf) &middot; [clickable map](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)).
+Below is a diagrammatic overview of the major repositories and components in Diego and CF (also [PDF](https://github.com/cloudfoundry/diego-design-notes/raw/master/diego-overview.pdf) &middot; [clickable map](https://cdn.rawgit.com/cloudfoundry/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)).
 
-[![Diego Overview](./diego-overview.png)](http://htmlpreview.github.io/?https://raw.githubusercontent.com/cloudfoundry/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
+[![Diego Overview](./diego-overview.png)](https://cdn.rawgit.com/cloudfoundry/diego-design-notes/master/clickable-diego-overview/clickable-diego-overview.html)
 
 Components in the blue region are part of the Diego core and handle the running and monitoring of Tasks and LRPs.  These components all come from the [Diego BOSH release](https://github.com/cloudfoundry/diego-release).
 
