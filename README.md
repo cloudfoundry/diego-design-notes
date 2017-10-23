@@ -96,7 +96,7 @@ The Database VMs provide Diego's core components and clients a consistent API to
     - maintains a lock in consul to ensure ***only one*** BBS handles requests and migrations at a time.
 
 
-The BBS requires a backing persistent data store.  **MySQL**, **PostgreSQL** and [**etcd**](https://github.com/coreos/etcd) are supported.
+The BBS requires a backing persistent data store.  **MySQL** and **PostgreSQL** are supported on current versions, and historically [**etcd**](https://github.com/coreos/etcd) was supported through Diego v1.0.
 
 
 ### Components on the Cell
