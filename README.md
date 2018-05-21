@@ -95,7 +95,12 @@ The Database VMs provide Diego's core components and clients a consistent API to
 - [**BBS**](https://github.com/cloudfoundry/bbs):
     - provides an RPC-style API over HTTP to both core Diego components (rep, auctioneer, converger) and external clients (CC-Bridge, route emitter, SSH proxy),
     - encapsulates access to the backing database and manages data migrations, encoding, and encryption,
-    - maintains a lock in consul to ensure ***only one*** BBS handles requests and migrations at a time.
+    - performs LRP convergence periodically, comparing DesiredLRPs and their ActualLRPs and taking action to enforce the desired state:
+        - if an instance is missing or unclaimed for too long, it a new auction is requested.
+        - if an extra instance is identified, a stop message is sent to the Rep on the Cell hosting the instance.
+    - performs Task converence periodically, resending auction requests for Tasks that have been pending for too long and completion callbacks for Tasks that have remained completed for too long,
+    - periodically sends aggregate metrics about DesiredLRPs, ActualLRPs, and Tasks to Loggregator,
+    - maintains a lock in consul to ensure ***only one*** BBS handles requests, migrations, and convergence at a time.
 
 
 The BBS requires a backing persistent data store.  **MySQL** and **PostgreSQL** are supported on current versions, and historically [**etcd**](https://github.com/coreos/etcd) was supported through Diego v1.0.
@@ -131,15 +136,6 @@ Note that there is a specificity gradient across the Rep, the Executor, and Gard
     - holds auctions for Tasks and LRP instances.
     - runs auctions using the [auction](https://github.com/cloudfoundry/auction) package.  Auction communication goes over HTTP and is between the Auctioneer and the Cell Reps.
     - maintains a lock in consul to ensure ***only one*** auctioneer handles auctions at a time.
-- [**Converger**](https://github.com/cloudfoundry/converger)
-    - maintains a lock in consul to ensure that ***only one*** converger performs convergence. This exclusivity is primarily for performance considerations, as convergence is idempotent.
-    - compares DesiredLRPs and their ActualLRPs and takes action to enforce the desired state:
-        - if an instance is missing or unclaimed for too long, it a new auction is requested.
-        - if an extra instance is identified, a stop message is sent to the Rep on the Cell hosting the instance.
-    - resends auction requests for Tasks that have been pending for too long and completion callbacks for Tasks that have remained completed for too long,
-    - periodically sends aggregate metrics about DesiredLRPs, ActualLRPs, and Tasks to Loggregator.
-
-In practice, much of the convergence processing actually takes place inside the BBS.
 
 
 ### Components on the Access VMs
