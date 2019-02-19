@@ -2,6 +2,8 @@
 
 This document discusses Diego's support for running Docker images and outlines how CF uses Diego to run Docker images.
 
+> **Docker v1 image manifest is scheduled to be deprecated as of Diego v3.0.0. It's recommended to use the v2 image manifest schema going forward.**
+
 - [Pushing a Docker image with the CF CLI](#pushing-a-docker-image-with-the-cf-cli)
 	- [CLI 6.13.0 and later](#cli-6130-and-later)
 	- [CLI 6.12.4 and earlier](#cli-6124-and-earlier)
